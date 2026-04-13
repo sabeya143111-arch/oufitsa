@@ -4,12 +4,12 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Outfit – تقييم</title>
-//fonts.googleapis.com"/>
-//fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-/* ── Animated background ── */
 html,body{
   min-height:100vh;
   font-family:'Inter',system-ui,sans-serif;
@@ -25,7 +25,14 @@ html,body{
   100%{background-position:0% 50%}
 }
 
-/* ── Progress bar ── */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.pt{position:absolute;border-radius:50%;opacity:0.15;bottom:-30px;animation:rise linear infinite}
+@keyframes rise{
+  0%{transform:translateY(0) scale(1);opacity:.15}
+  85%{opacity:.07}
+  100%{transform:translateY(-110vh) scale(.3);opacity:0}
+}
+
 .prog-wrap{
   position:sticky;top:0;z-index:100;
   padding:14px 16px 0;
@@ -52,15 +59,21 @@ html,body{
 .prog-num{font-size:11.5px;font-weight:700;color:#f97316;min-width:30px;text-align:left}
 body:not(.ltr) .prog-num{text-align:right}
 
-/* ── Main card ── */
+.page{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;
+  padding:12px 16px 64px;
+}
+
 .card{
   width:100%;max-width:560px;
   background:rgba(255,255,255,0.92);
   border-radius:28px;
   box-shadow:0 32px 80px rgba(15,23,42,0.18);
   backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
   overflow:hidden;
-  margin:14px auto;
+  margin-top:14px;
 }
 
 /* ── Dark header ── */
@@ -68,78 +81,339 @@ body:not(.ltr) .prog-num{text-align:right}
   position:relative;overflow:hidden;
   background:linear-gradient(135deg,#0f172a,#1e293b,#0f172a);
   padding:24px 26px 26px;
-  text-align: center;
 }
-.dh-top{
-  display:flex;align-items:center;
-  justify-content:center;
-  margin-bottom:18px;position:relative;z-index:2;
+body.ltr .dh{direction:ltr}
+body:not(.ltr) .dh{direction:rtl}
+
+.dh::before{
+  content:'';position:absolute;
+  width:300px;height:300px;top:-90px;right:-70px;
+  background:radial-gradient(circle,rgba(249,115,22,.22) 0%,transparent 68%);
+  pointer-events:none;
 }
-.logo-img{
-    height: 60px;
-    width: auto;
-    border-radius: 12px;
-    object-fit: contain;
-    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+.dh::after{
+  content:'';position:absolute;
+  width:220px;height:220px;bottom:-60px;left:-50px;
+  background:radial-gradient(circle,rgba(251,191,36,.18) 0%,transparent 68%);
+  pointer-events:none;
 }
 
-/* Lang Toggle Positioned absolute inside header */
+/* ── Header top row: logo centered, toggle absolute ── */
+.dh-top{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:18px;
+  z-index:2;
+  min-height:56px;
+}
+
+.logo-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0;
+}
+
+.logo-img{
+  height:56px;
+  width:auto;
+  border-radius:10px;
+  object-fit:contain;
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,0.25));
+}
+
+.logo-fb{
+  width:56px;height:56px;border-radius:12px;
+  background:linear-gradient(135deg,#f97316,#fbbf24);
+  display:none;align-items:center;justify-content:center;
+  font-size:28px;font-weight:800;color:#fff;
+}
+.logo-fb.show{display:flex}
+
+/* Language toggle: absolute, right side for RTL, left for LTR */
 .lt{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  position:absolute;
+  right:0;
+  top:50%;
+  transform:translateY(-50%);
   display:flex;
   background:rgba(255,255,255,.1);
   border-radius:99px;
   border:1px solid rgba(255,255,255,.18);
   overflow:hidden;
+  z-index:3;
 }
-body.ltr .lt { right: 26px; }
-body:not(.ltr) .lt { left: 26px; }
+body.ltr .lt{
+  right:auto;
+  left:0;
+}
 
 .lb{
-  padding:5px 12px; font-size:11px; font-weight:600;
-  border:none;background:transparent; color:rgba(255,255,255,.6);
-  cursor:pointer; transition:all .2s;
+  padding:6px 13px;
+  font-size:12px;font-weight:600;
+  border:none;background:transparent;
+  color:rgba(255,255,255,.6);
+  cursor:pointer;border-radius:99px;
+  transition:all .2s;
+  font-family:'Inter',system-ui,sans-serif;
+  white-space:nowrap;
 }
-.lb.active{ background:linear-gradient(135deg,#f97316,#fbbf24); color:#fff; }
+.lb.active{
+  background:linear-gradient(135deg,#f97316,#fbbf24);
+  color:#fff;
+  box-shadow:0 2px 10px rgba(249,115,22,.4);
+}
 
-.dh-h1{ font-size:clamp(16px,4vw,22px); font-weight:700; color:#fff; margin-bottom:5px; position:relative; z-index:2; }
-.dh-sub{ font-size:13px; color:rgba(255,255,255,.6); line-height:1.6; position:relative; z-index:2; }
+.ord-pill{
+  display:none;
+  align-items:center;gap:6px;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.18);
+  color:rgba(255,255,255,.9);
+  font-size:12px;font-weight:600;
+  padding:5px 14px;border-radius:99px;
+  margin-bottom:14px;
+  position:relative;z-index:2;
+  width:fit-content;
+  margin-left:auto;
+  margin-right:auto;
+}
+.ord-pill.show{display:inline-flex}
 
-/* ── Form components ── */
-.cb{ padding:22px 20px 26px; display:flex; flex-direction:column; gap:15px; }
-body.ltr .cb{ direction:ltr; }
-.rc{ background:#fff; border-radius:18px; border:2px solid #f1f5f9; padding:18px; position: relative; overflow: hidden;}
-.star{ font-size:34px; cursor:pointer; color:#e2e8f0; transition: color 0.15s, transform 0.15s; display: inline-block;}
-.star.sel{ color:#f97316; text-shadow: 0 0 10px rgba(249,115,22,0.3); transform: scale(1.1); }
+.dh-h1{
+  font-size:clamp(16px,4vw,22px);
+  font-weight:700;color:#fff;
+  line-height:1.4;
+  position:relative;z-index:2;
+  margin-bottom:5px;
+  text-align:center;
+}
+.dh-sub{
+  font-size:13px;
+  color:rgba(255,255,255,.6);
+  line-height:1.6;
+  position:relative;z-index:2;
+  text-align:center;
+}
 
+/* ── Card body ── */
+.cb{
+  padding:22px 20px 26px;
+  display:flex;flex-direction:column;gap:15px;
+}
+body.ltr .cb{direction:ltr}
+body:not(.ltr) .cb{direction:rtl}
+
+/* ── Rating card ── */
+.rc{
+  background:#fff;
+  border-radius:18px;
+  border:2px solid #f1f5f9;
+  overflow:hidden;
+  transition:transform .2s,border-color .25s,box-shadow .25s;
+}
+.rc:hover{transform:translateY(-1px)}
+.rc.rated{
+  border-color:#fed7aa;
+  box-shadow:0 8px 30px rgba(249,115,22,.12);
+}
+.rc-bar{
+  height:3px;
+  background:linear-gradient(90deg,#f97316,#fbbf24);
+  transform:scaleX(0);
+  transition:transform .4s cubic-bezier(.4,0,.2,1);
+}
+body.ltr .rc-bar{transform-origin:left}
+body:not(.ltr) .rc-bar{transform-origin:right}
+.rc.rated .rc-bar{transform:scaleX(1)}
+.rc-inner{padding:18px 20px 15px}
+.rc-lbl{
+  display:flex;align-items:center;gap:8px;
+  font-size:13.5px;font-weight:600;color:#1e293b;
+  margin-bottom:14px;
+  justify-content:flex-end;
+}
+body.ltr .rc-lbl{justify-content:flex-start}
+.rdot{width:7px;height:7px;border-radius:50%;background:#f97316;flex-shrink:0}
+
+.ser{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.sg{display:flex;gap:4px;direction:ltr;flex-wrap:nowrap}
+.star{
+  font-size:34px;cursor:pointer;color:#e2e8f0;
+  transition:transform .15s,color .15s,text-shadow .15s,filter .15s;
+  display:inline-block;line-height:1;
+  user-select:none;-webkit-user-select:none;
+}
+.star:hover{transform:scale(1.15)}
+.star.sel{
+  color:#f97316;
+  text-shadow:0 0 20px rgba(249,115,22,.8);
+  transform:translateY(-3px) scale(1.12);
+  filter:drop-shadow(0 4px 8px rgba(249,115,22,.4));
+}
+.star.burst{animation:burst .3s ease both}
+@keyframes burst{
+  0%{transform:translateY(-3px) scale(1.12)}
+  40%{transform:translateY(-6px) scale(1.4)}
+  100%{transform:translateY(-3px) scale(1.12)}
+}
+.mood{
+  font-size:26px;
+  filter:grayscale(1);opacity:.4;
+  transition:all .25s;flex-shrink:0;
+}
+.mood.on{filter:grayscale(0);opacity:1;transform:scale(1.2)}
+.shint{
+  font-size:12px;font-weight:500;color:#f97316;
+  text-align:center;min-height:16px;
+  opacity:0;transition:opacity .2s;
+}
+.shint.on{opacity:1}
+
+/* ── Comment card ── */
+.cc{
+  background:#fff;border-radius:18px;
+  border:2px solid #f1f5f9;padding:18px 20px;
+}
+.cc-lbl{
+  display:flex;align-items:center;gap:8px;
+  font-size:13.5px;font-weight:600;color:#1e293b;
+  margin-bottom:11px;justify-content:flex-end;
+}
+body.ltr .cc-lbl{justify-content:flex-start}
+.opt{
+  font-size:11px;background:#f1f5f9;
+  color:#64748b;padding:2px 10px;
+  border-radius:99px;font-weight:400;
+}
 textarea{
-  width:100%; min-height:90px; padding:12px; border-radius:14px;
-  border:1.5px solid #e2e8f0; outline:none; font-family: inherit;
-  resize: none; transition: border-color 0.2s;
+  width:100%;min-height:96px;
+  border:1.5px solid #e2e8f0;
+  border-radius:14px;padding:12px 14px;
+  font-size:14px;font-family:'Inter',system-ui,sans-serif;
+  color:#1e293b;resize:vertical;outline:none;
+  background:#fff;transition:border-color .2s,box-shadow .2s;
+  line-height:1.6;
 }
-textarea:focus{ border-color: #f97316; }
+body.ltr textarea{direction:ltr;text-align:left}
+body:not(.ltr) textarea{direction:rtl;text-align:right}
+textarea:focus{
+  border-color:#f97316;
+  box-shadow:0 0 0 3px rgba(249,115,22,.15);
+}
+textarea::placeholder{color:#cbd5e1}
+
+.err{
+  display:none;font-size:13px;
+  color:#ef4444;text-align:center;
+  background:#fff1f2;border-radius:12px;
+  padding:10px 14px;border:1px solid #fecdd3;
+}
+.err.show{display:block}
 
 .sbtn{
-  width:100%; background:linear-gradient(135deg,#f97316,#fbbf24);
-  color:#fff; border:none; border-radius:99px; padding:16px;
-  font-size: 16px; font-weight:700; cursor:pointer; 
-  box-shadow:0 16px 40px rgba(249,115,22,.4);
-  transition: transform 0.2s;
+  width:100%;
+  background:linear-gradient(135deg,#f97316,#fbbf24);
+  color:#fff;border:none;border-radius:99px;
+  font-size:15px;font-weight:700;padding:15px 30px;
+  cursor:pointer;
+  font-family:'Inter',system-ui,sans-serif;
+  box-shadow:0 16px 40px rgba(249,115,22,.45);
+  animation:pulse 2.5s ease-in-out infinite;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  transition:transform .2s,filter .2s,opacity .2s;
 }
-.sbtn:active{ transform: scale(0.98); }
+.sbtn:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.05)}
+.sbtn:active:not(:disabled){transform:scale(.98)}
+.sbtn:disabled{opacity:.7;cursor:not-allowed;animation:none}
+@keyframes pulse{
+  0%,100%{box-shadow:0 16px 40px rgba(249,115,22,.45)}
+  50%{box-shadow:0 20px 60px rgba(249,115,22,.65)}
+}
+.spin{
+  display:none;width:18px;height:18px;
+  border:2.5px solid rgba(255,255,255,.4);
+  border-top-color:#fff;border-radius:50%;
+  animation:sp .7s linear infinite;flex-shrink:0;
+}
+.spin.show{display:block}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+.priv{text-align:center;font-size:12px;color:#94a3b8;line-height:1.5}
 
 /* ── Thank you ── */
-.ty{ display:none; flex-direction:column; align-items:center; padding:50px 20px; text-align: center;}
-.ty.show{ display:flex; animation: fadeIn 0.5s ease both; }
-@keyframes fadeIn { from{opacity:0; transform: translateY(10px);} to{opacity:1; transform: translateY(0);} }
+.ty{
+  display:none;flex-direction:column;align-items:center;
+  text-align:center;padding:56px 30px 48px;
+  animation:fuUp .45s ease both;
+}
+.ty.show{display:flex}
+@keyframes fuUp{
+  from{opacity:0;transform:translateY(24px) scale(.96)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.ty-ring{
+  width:88px;height:88px;border-radius:50%;
+  background:linear-gradient(135deg,#fff7ed,#fef3c7);
+  display:flex;align-items:center;justify-content:center;
+  font-size:42px;
+  box-shadow:0 16px 40px rgba(249,115,22,.25);
+  margin-bottom:20px;
+  animation:starIn .55s cubic-bezier(.18,.89,.32,1.28) both;
+}
+@keyframes starIn{
+  from{transform:scale(0) rotate(-180deg);opacity:0}
+  to{transform:scale(1) rotate(0deg);opacity:1}
+}
+.ty-h{font-size:22px;font-weight:800;color:#1e293b;margin-bottom:12px}
+.ty-p{font-size:14px;color:#64748b;line-height:1.75;max-width:320px;margin-bottom:26px}
+.ty-a{
+  display:inline-block;
+  border:2px solid #f97316;color:#f97316;
+  text-decoration:none;border-radius:99px;
+  padding:12px 36px;font-size:14px;font-weight:700;
+  transition:all .2s;font-family:'Inter',system-ui,sans-serif;
+}
+.ty-a:hover{
+  background:linear-gradient(135deg,#f97316,#fbbf24);
+  border-color:transparent;color:#fff;
+  box-shadow:0 10px 28px rgba(249,115,22,.35);
+  transform:translateY(-2px);
+}
 
+/* ── Confetti ── */
+.cf{
+  position:fixed;border-radius:3px;
+  pointer-events:none;z-index:9999;
+  animation:cfly 1.5s ease-out forwards;
+}
+@keyframes cfly{
+  0%{transform:translate(0,0) rotate(0deg) scale(1);opacity:1}
+  100%{transform:translate(var(--tx),var(--ty)) rotate(var(--r)) scale(.3);opacity:0}
+}
+
+/* ── Bilingual ── */
+.en{display:none}
+.ar{display:inline}
+body.ltr .en{display:inline}
+body.ltr .ar{display:none}
+
+@media(max-width:480px){
+  .dh{padding:18px 16px 20px}
+  .cb{padding:16px 14px 20px}
+  .star{font-size:30px}
+  .rc-inner{padding:14px 15px 12px}
+  .ty{padding:40px 20px 36px}
+  .logo-img{height:46px}
+}
 </style>
 </head>
 <body>
 
-<!-- Progress bar -->
+<div class="particles" id="ptc"></div>
+
 <div class="prog-wrap">
   <div class="prog-pill">
     <span class="prog-lbl"><span class="ar">التقدم</span><span class="en">Progress</span></span>
@@ -148,115 +422,273 @@ textarea:focus{ border-color: #f97316; }
   </div>
 </div>
 
+<div class="page">
 <div class="card" id="main-card">
-  <!-- Header with Centered Logo -->
+
   <div class="dh">
+    <!-- Header top: logo centered, toggle absolute -->
     <div class="dh-top">
-      <img class="logo-img" src="https://raw.githubusercontent.com/sabeya143111-arch/oufitsa/main/.png" alt="Outfit"/>
-      
-      <!-- Language Toggle Side-Aligned -->
+      <div class="logo-wrap">
+        <img class="logo-img"
+          src="https://raw.githubusercontent.com/sabeya143111-arch/oufitsa/main/.png"
+          alt="Outfit"
+          onerror="this.style.display='none';document.getElementById('lfb').classList.add('show')"/>
+        <div class="logo-fb" id="lfb">O</div>
+      </div>
       <div class="lt">
         <button class="lb active" id="bar" onclick="setLang('ar')">عربي</button>
-        <button class="lb" id="ben" onclick="setLang('en')">En</button>
+        <button class="lb" id="ben" onclick="setLang('en')">English</button>
       </div>
     </div>
 
-    <div class="dh-h1"><span class="ar">كيف كانت تجربتك؟</span><span class="en">How was your experience?</span></div>
-    <div class="dh-sub"><span class="ar">تقييمك يساعدنا على التحسين المستمر.</span><span class="en">Your feedback helps us improve.</span></div>
+    <div class="ord-pill" id="opill">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      <span class="ar">رقم الطلب:</span><span class="en">Order:</span>
+      <span id="oval"></span>
+    </div>
+
+    <div class="dh-h1"><span class="ar">كيف كانت تجربتك مع أوتفيت؟</span><span class="en">How was your Outfit experience?</span></div>
+    <div class="dh-sub"><span class="ar">بضع ثوانٍ — تقييمك يساعدنا على التحسين المستمر.</span><span class="en">Just a moment — your feedback helps us improve continuously.</span></div>
   </div>
 
-  <!-- Form Section -->
+  <!-- Form body -->
   <div class="cb" id="fb">
-    <!-- Overall Experience -->
-    <div class="rc">
-      <p style="font-weight:600; margin-bottom:12px; font-size: 14px; color: #1e293b;">
-        <span class="ar">تقييم التجربة بشكل عام</span><span class="en">Overall Experience</span>
-      </p>
-      <div class="sg" id="sg-overall" style="direction:ltr;">
-        <span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span>
+
+    <!-- Rating: Overall -->
+    <div class="rc" id="rc-overall">
+      <div class="rc-bar"></div>
+      <div class="rc-inner">
+        <div class="rc-lbl"><span class="ar">تقييم التجربة</span><span class="en">Rate Overall Experience</span><div class="rdot"></div></div>
+        <div class="ser">
+          <div class="sg" id="sg-overall">
+            <span class="star" data-g="overall" data-v="1">★</span>
+            <span class="star" data-g="overall" data-v="2">★</span>
+            <span class="star" data-g="overall" data-v="3">★</span>
+            <span class="star" data-g="overall" data-v="4">★</span>
+            <span class="star" data-g="overall" data-v="5">★</span>
+          </div>
+          <div class="mood" id="md-overall">😐</div>
+        </div>
+        <div class="shint" id="sh-overall"></div>
       </div>
     </div>
 
-    <!-- Product Quality -->
-    <div class="rc">
-      <p style="font-weight:600; margin-bottom:12px; font-size: 14px; color: #1e293b;">
-        <span class="ar">تقييم جودة المنتجات</span><span class="en">Product Quality</span>
-      </p>
-      <div class="sg" id="sg-product" style="direction:ltr;">
-        <span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span>
+    <!-- Rating: Product -->
+    <div class="rc" id="rc-service">
+      <div class="rc-bar"></div>
+      <div class="rc-inner">
+        <div class="rc-lbl"><span class="ar">تقييم المنتجات</span><span class="en">Rate the Product</span><div class="rdot"></div></div>
+        <div class="ser">
+          <div class="sg" id="sg-service">
+            <span class="star" data-g="service" data-v="1">★</span>
+            <span class="star" data-g="service" data-v="2">★</span>
+            <span class="star" data-g="service" data-v="3">★</span>
+            <span class="star" data-g="service" data-v="4">★</span>
+            <span class="star" data-g="service" data-v="5">★</span>
+          </div>
+          <div class="mood" id="md-service">😐</div>
+        </div>
+        <div class="shint" id="sh-service"></div>
       </div>
     </div>
 
-    <textarea id="cmt" placeholder="Write your thoughts... اترك انطباعك..."></textarea>
-    
-    <button class="sbtn" onclick="handleSubmit()">
-      <span class="ar">إرسال التقييم ➤</span><span class="en">Send Feedback ➤</span>
+    <!-- Rating: Service -->
+    <div class="rc" id="rc-product">
+      <div class="rc-bar"></div>
+      <div class="rc-inner">
+        <div class="rc-lbl"><span class="ar">تقييم خدمة العملاء</span><span class="en">Rate our Service</span><div class="rdot"></div></div>
+        <div class="ser">
+          <div class="sg" id="sg-product">
+            <span class="star" data-g="product" data-v="1">★</span>
+            <span class="star" data-g="product" data-v="2">★</span>
+            <span class="star" data-g="product" data-v="3">★</span>
+            <span class="star" data-g="product" data-v="4">★</span>
+            <span class="star" data-g="product" data-v="5">★</span>
+          </div>
+          <div class="mood" id="md-product">😐</div>
+        </div>
+        <div class="shint" id="sh-product"></div>
+      </div>
+    </div>
+
+    <!-- Comment -->
+    <div class="cc">
+      <div class="cc-lbl">
+        <span class="opt"><span class="ar">اختياري</span><span class="en">optional</span></span>
+        <span class="ar">اترك تعليقاً</span><span class="en">Leave a Comment</span>
+      </div>
+      <textarea id="cmt" rows="4"></textarea>
+    </div>
+
+    <!-- Error -->
+    <div class="err" id="errmsg">
+      <span class="ar">⚠️ يرجى تقييم جميع الحقول الثلاثة قبل الإرسال.</span>
+      <span class="en">⚠️ Please rate all three categories before submitting.</span>
+    </div>
+
+    <!-- Submit -->
+    <button class="sbtn" id="sbtn" onclick="handleSubmit()">
+      <div class="spin" id="spin"></div>
+      <span id="btxt"><span class="ar">إرسال التقييم ➤</span><span class="en">Send Feedback ➤</span></span>
     </button>
+
+    <!-- Privacy -->
+    <div class="priv">
+      🔒 <span class="ar">بياناتك خاصة. تُستخدم فقط لتحسين أوتفيت.</span>
+      <span class="en">Your data is private. Used only to improve Outfit.</span>
+    </div>
   </div>
 
-  <!-- Success Message -->
+  <!-- Thank you -->
   <div class="ty" id="ty">
-    <div style="font-size: 50px; margin-bottom: 20px;">🎉</div>
-    <h2 style="color:#1e293b; margin-bottom: 10px;"><span class="ar">شكراً لتقييمك!</span><span class="en">Thank you!</span></h2>
-    <p style="color:#64748b; margin-bottom: 25px; line-height: 1.6;">
-      <span class="ar">تم استلام تقييمك بنجاح. نقدّر وقتك.</span>
-      <span class="en">Your feedback has been received. We appreciate your time.</span>
+    <div class="ty-ring">⭐</div>
+    <div class="ty-h"><span class="ar">شكراً لتقييمك!</span><span class="en">Thank you for your feedback!</span></div>
+    <p class="ty-p">
+      <span class="ar">تم استلام تقييمك بنجاح. نقدّر وقتك ومساهمتك في تحسين تجربة التسوق في أوتفيت.</span>
+      <span class="en">Your feedback has been received. We appreciate your time and contribution to improving the Outfit shopping experience.</span>
     </p>
-    <a href="https://outfitsa.co/en" style="background: #f1f5f9; color:#f97316; font-weight:700; text-decoration:none; padding: 12px 30px; border-radius: 99px;">
-        <span class="ar">العودة للمتجر</span><span class="en">Back to Store</span>
+    <a class="ty-a" href="https://outfitsa.co/en" target="_top">
+      <span class="ar">العودة إلى المتجر</span><span class="en">Back to Store</span>
     </a>
   </div>
+
+</div>
 </div>
 
 <script>
-  var ratings = {overall:0, product:0};
-  var currentLang = 'ar';
-
-  function updateProgress() {
-    var filled = Object.values(ratings).filter(v => v > 0).length;
-    var p = Math.round((filled / 2) * 100);
-    document.getElementById('pf').style.width = p + '%';
-    document.getElementById('pn').textContent = p + '%';
+(function(){
+  var pc=document.getElementById('ptc');
+  var cols=['#f97316','#fbbf24','#a78bfa','#34d399','#60a5fa'];
+  for(var i=0;i<24;i++){
+    var el=document.createElement('div');
+    el.className='pt';
+    var s=Math.random()*8+3;
+    el.style.cssText='width:'+s+'px;height:'+s+'px;left:'+Math.random()*100+'%;background:'+cols[i%5]+';animation-duration:'+(Math.random()*14+7)+'s;animation-delay:'+Math.random()*14+'s';
+    pc.appendChild(el);
   }
 
-  document.querySelectorAll('.star').forEach(star => {
-    star.onclick = function() {
-      var v = parseInt(this.getAttribute('data-v'));
-      var group = this.parentElement.id.replace('sg-', '');
-      ratings[group] = v;
-      var children = this.parentElement.children;
-      for(var i=0; i<5; i++) {
-        children[i].classList.toggle('sel', i < v);
-      }
-      updateProgress();
-    };
+  var lang='ar';
+  var ratings={overall:0,service:0,product:0};
+  var groups=['overall','service','product'];
+  var moods=['😞','😐','🙂','😊','🤩'];
+  var hints={ar:['','سيء جداً','ضعيف','جيد','جيد جداً','ممتاز'],en:['','Terrible','Poor','Good','Very Good','Excellent']};
+
+  var params=new URLSearchParams(window.location.search);
+  var orderId=params.get('order')||'';
+  if(orderId){
+    document.getElementById('oval').textContent=orderId;
+    document.getElementById('opill').classList.add('show');
+  }
+
+  function upProg(){
+    var d=groups.filter(function(g){return ratings[g]>0}).length;
+    var p=Math.round(d/3*100);
+    document.getElementById('pf').style.width=p+'%';
+    document.getElementById('pn').textContent=p+'%';
+  }
+
+  groups.forEach(function(g){
+    var sg=document.getElementById('sg-'+g);
+    var stars=sg.querySelectorAll('.star');
+    var md=document.getElementById('md-'+g);
+    var sh=document.getElementById('sh-'+g);
+    var rc=document.getElementById('rc-'+g);
+
+    function draw(v){
+      stars.forEach(function(s){
+        var sv=parseInt(s.getAttribute('data-v'));
+        sv<=v?s.classList.add('sel'):s.classList.remove('sel');
+      });
+      if(v>0){md.textContent=moods[v-1];md.classList.add('on');sh.textContent=hints[lang][v];sh.classList.add('on')}
+      else{md.textContent='😐';md.classList.remove('on');sh.textContent='';sh.classList.remove('on')}
+    }
+
+    stars.forEach(function(star){
+      var v=parseInt(star.getAttribute('data-v'));
+      star.addEventListener('mouseover',function(){draw(v)});
+      star.addEventListener('mouseout',function(){draw(ratings[g])});
+      star.addEventListener('click',function(){
+        ratings[g]=v;draw(v);
+        rc.classList.add('rated');
+        document.getElementById('errmsg').classList.remove('show');
+        star.classList.add('burst');
+        star.addEventListener('animationend',function(){star.classList.remove('burst')},{once:true});
+        upProg();
+      });
+    });
   });
 
-  window.setLang = function(l) {
-    currentLang = l;
-    document.body.classList.toggle('ltr', l === 'en');
-    document.getElementById('bar').classList.toggle('active', l === 'ar');
-    document.getElementById('ben').classList.toggle('active', l === 'en');
+  window.setLang=function(l){
+    lang=l;
+    var b=document.body,h=document.documentElement;
+    if(l==='en'){b.classList.add('ltr');b.setAttribute('dir','ltr');h.setAttribute('lang','en');h.setAttribute('dir','ltr')}
+    else{b.classList.remove('ltr');b.setAttribute('dir','rtl');h.setAttribute('lang','ar');h.setAttribute('dir','rtl')}
+    document.getElementById('bar').classList.toggle('active',l==='ar');
+    document.getElementById('ben').classList.toggle('active',l==='en');
+    var ta=document.getElementById('cmt');
+    ta.placeholder=l==='ar'?'يمكنك الكتابة بالعربية أو الإنجليزية...':'Write in Arabic or English...';
+    groups.forEach(function(g){
+      var sh=document.getElementById('sh-'+g);
+      if(ratings[g]>0)sh.textContent=hints[l][ratings[g]];
+    });
   };
+  document.getElementById('cmt').placeholder='يمكنك الكتابة بالعربية أو الإنجليزية...';
 
-  function handleSubmit() {
-    if(ratings.overall === 0 || ratings.product === 0) {
-      alert(currentLang === 'ar' ? 'يرجى إكمال التقييم أولاً' : 'Please complete the rating first');
-      return;
-    }
-    document.getElementById('fb').style.display = 'none';
-    document.getElementById('ty').classList.add('show');
-    
-    // If connected to Google Apps Script
-    if(typeof google !== 'undefined') {
-        var payload = {
-            rating_overall: ratings.overall,
-            rating_product: ratings.product,
-            comment: document.getElementById('cmt').value
-        };
-        google.script.run.saveFeedback(payload);
+  function boom(){
+    var pal=['#f97316','#fbbf24','#a78bfa','#34d399','#60a5fa'];
+    for(var i=0;i<50;i++){
+      (function(){
+        var el=document.createElement('div');
+        el.className='cf';
+        var sz=Math.random()*6+6;
+        var ang=Math.random()*360;
+        var dist=100+Math.random()*200;
+        var tx=Math.cos(ang*Math.PI/180)*dist;
+        var ty=Math.sin(ang*Math.PI/180)*dist-60;
+        el.style.cssText='width:'+sz+'px;height:'+sz+'px;background:'+pal[Math.floor(Math.random()*5)]+';left:calc(50% + '+(Math.random()*40-20)+'px);top:38%;--tx:'+tx+'px;--ty:'+ty+'px;--r:'+(Math.random()*720-360)+'deg;animation-delay:'+Math.random()*0.25+'s;animation-duration:'+(1.2+Math.random()*0.5)+'s;border-radius:'+(Math.random()>.5?'50%':'3px');
+        document.body.appendChild(el);
+        setTimeout(function(){el.remove()},2200);
+      })();
     }
   }
+
+  function showTY(){
+    document.getElementById('fb').style.display='none';
+    document.getElementById('ty').classList.add('show');
+    boom();
+  }
+
+  window.handleSubmit=function(){
+    if(!ratings.overall||!ratings.service||!ratings.product){
+      var e=document.getElementById('errmsg');
+      e.classList.add('show');
+      e.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+    var btn=document.getElementById('sbtn');
+    btn.disabled=true;
+    document.getElementById('spin').classList.add('show');
+
+    var payload={
+      order_id:orderId,
+      rating_overall:ratings.overall,
+      rating_service:ratings.service,
+      rating_product:ratings.product,
+      comment:document.getElementById('cmt').value.trim(),
+      user_agent:navigator.userAgent
+    };
+
+    var fb=setTimeout(function(){showTY()},6000);
+    try{
+      google.script.run
+        .withSuccessHandler(function(){clearTimeout(fb);showTY()})
+        .withFailureHandler(function(){clearTimeout(fb);showTY()})
+        .saveFeedback(payload);
+    }catch(ex){clearTimeout(fb);setTimeout(showTY,600)}
+  };
+
+  upProg();
+})();
 </script>
 </body>
 </html>
