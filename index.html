@@ -223,18 +223,19 @@ body.ltr .cb{direction:ltr}
   border-color:#ffc4b0;
   box-shadow:0 8px 30px rgba(255,69,0,.12);
 }
+/* dynamic bar color is set via JS using data-color */
 .rc-bar{
   height:3px;
   background:linear-gradient(90deg,#ff4500,#ff6a00);
   transform:scaleX(0);
-  transition:transform .4s cubic-bezier(.4,0,.2,1);
+  transition:transform .4s cubic-bezier(.4,0,.2,1),background .3s;
 }
 body.ltr .rc-bar{transform-origin:left}
 body:not(.ltr) .rc-bar{transform-origin:right}
 .rc.rated .rc-bar{transform:scaleX(1)}
 .rc-inner{padding:18px 20px 15px}
 
-/* Label — 16px as requested */
+/* Label */
 .rc-lbl{
   display:flex;align-items:center;gap:9px;
   font-size:16px;font-weight:600;color:#1e293b;
@@ -251,25 +252,36 @@ body.ltr .rc-lbl{justify-content:flex-start}
 /* 46px stars for easy thumb tapping */
 .star{
   font-size:46px;
-  cursor:pointer;color:#e2e8f0;
+  cursor:pointer;
+  color:#e2e8f0;
   transition:transform .15s,color .15s,text-shadow .15s,filter .15s;
   display:inline-block;line-height:1;
   user-select:none;-webkit-user-select:none;
   touch-action:manipulation;
 }
 .star:hover{transform:scale(1.12)}
-.star.sel{
-  color:#ff4500;
-  text-shadow:0 0 22px rgba(255,69,0,.7);
-  transform:translateY(-3px) scale(1.1);
-  filter:drop-shadow(0 4px 8px rgba(255,69,0,.4));
-}
+
+/* ── Multi-colour selection classes ── */
+.star.sel-1{color:#ef4444;text-shadow:0 0 20px rgba(239,68,68,.55);transform:translateY(-3px) scale(1.1);filter:drop-shadow(0 4px 8px rgba(239,68,68,.35))}
+.star.sel-2{color:#f97316;text-shadow:0 0 20px rgba(249,115,22,.55);transform:translateY(-3px) scale(1.1);filter:drop-shadow(0 4px 8px rgba(249,115,22,.35))}
+.star.sel-3{color:#facc15;text-shadow:0 0 20px rgba(250,204,21,.55);transform:translateY(-3px) scale(1.1);filter:drop-shadow(0 4px 8px rgba(250,204,21,.35))}
+.star.sel-4{color:#84cc16;text-shadow:0 0 20px rgba(132,204,22,.55);transform:translateY(-3px) scale(1.1);filter:drop-shadow(0 4px 8px rgba(132,204,22,.35))}
+.star.sel-5{color:#22c55e;text-shadow:0 0 20px rgba(34,197,94,.55);transform:translateY(-3px) scale(1.1);filter:drop-shadow(0 4px 8px rgba(34,197,94,.35))}
+
 .star.burst{animation:burst .3s ease both}
 @keyframes burst{
   0%{transform:translateY(-3px) scale(1.1)}
   40%{transform:translateY(-7px) scale(1.38)}
   100%{transform:translateY(-3px) scale(1.1)}
 }
+
+/* rc-bar colours per rating */
+.rc-bar.c1{background:linear-gradient(90deg,#ef4444,#fca5a5)}
+.rc-bar.c2{background:linear-gradient(90deg,#f97316,#fdba74)}
+.rc-bar.c3{background:linear-gradient(90deg,#facc15,#fde68a)}
+.rc-bar.c4{background:linear-gradient(90deg,#84cc16,#bef264)}
+.rc-bar.c5{background:linear-gradient(90deg,#22c55e,#86efac)}
+
 .mood{
   font-size:28px;
   filter:grayscale(1);opacity:.4;
@@ -277,11 +289,19 @@ body.ltr .rc-lbl{justify-content:flex-start}
 }
 .mood.on{filter:grayscale(0);opacity:1;transform:scale(1.18)}
 .shint{
-  font-size:13px;font-weight:500;color:#ff4500;
+  font-size:13px;font-weight:500;
   text-align:center;min-height:18px;
-  opacity:0;transition:opacity .2s;
+  opacity:0;transition:opacity .2s,color .2s;
+  color:#ff4500;
 }
 .shint.on{opacity:1}
+
+/* colour the hint text to match star tier */
+.shint.c1{color:#ef4444}
+.shint.c2{color:#f97316}
+.shint.c3{color:#ca9a00}
+.shint.c4{color:#4d7c0f}
+.shint.c5{color:#16a34a}
 
 /* ── Comment card ── */
 .cc{
@@ -459,13 +479,6 @@ body.ltr .ar{display:none}
   <!-- ══ Dark Header ══ -->
   <div class="dh">
 
-    <!--
-      3-column grid:
-        col 1 (dh-left)   → holds toggle when LTR (English)
-        col 2 (dh-center) → logo, always perfectly centered
-        col 3 (dh-right)  → holds toggle when RTL (Arabic, default)
-      JS moves #ltoggle between col 1 and col 3 on language switch.
-    -->
     <div class="dh-top">
       <div class="dh-left"  id="dh-left"></div>
 
@@ -486,7 +499,7 @@ body.ltr .ar{display:none}
       </div>
     </div>
 
-    <!-- Order pill (shown only if ?order= param present) -->
+    <!-- Order pill -->
     <div class="ord-pill" id="opill">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
       <span class="ar">رقم الطلب:</span><span class="en">Order:</span>
@@ -509,7 +522,7 @@ body.ltr .ar{display:none}
 
     <!-- Rating: Overall -->
     <div class="rc" id="rc-overall">
-      <div class="rc-bar"></div>
+      <div class="rc-bar" id="bar-overall"></div>
       <div class="rc-inner">
         <div class="rc-lbl">
           <span class="ar">تقييم التجربة العامة</span>
@@ -532,7 +545,7 @@ body.ltr .ar{display:none}
 
     <!-- Rating: Products -->
     <div class="rc" id="rc-service">
-      <div class="rc-bar"></div>
+      <div class="rc-bar" id="bar-service"></div>
       <div class="rc-inner">
         <div class="rc-lbl">
           <span class="ar">تقييم المنتجات</span>
@@ -555,7 +568,7 @@ body.ltr .ar{display:none}
 
     <!-- Rating: Customer Service -->
     <div class="rc" id="rc-product">
-      <div class="rc-bar"></div>
+      <div class="rc-bar" id="bar-product"></div>
       <div class="rc-inner">
         <div class="rc-lbl">
           <span class="ar">تقييم خدمة العملاء</span>
@@ -657,6 +670,16 @@ body.ltr .ar{display:none}
     en: ['','Terrible','Poor','Good','Very Good','Excellent']
   };
 
+  /*
+   * ── Multi-colour palette per star value ──
+   * 1 = Red  #ef4444
+   * 2 = Orange  #f97316
+   * 3 = Yellow/Gold  #facc15
+   * 4 = Light Green  #84cc16
+   * 5 = Dark Green  #22c55e
+   */
+  var starColors = ['','#ef4444','#f97316','#facc15','#84cc16','#22c55e'];
+
   /* ── Order ID from URL ── */
   var params  = new URLSearchParams(window.location.search);
   var orderId = params.get('order') || '';
@@ -680,30 +703,46 @@ body.ltr .ar{display:none}
     var md    = document.getElementById('md-' + g);
     var sh    = document.getElementById('sh-' + g);
     var rc    = document.getElementById('rc-' + g);
+    var bar   = document.getElementById('bar-' + g);
 
+    /* Clear all colour classes from a star element */
+    function clearStarClass(star){
+      star.classList.remove('sel-1','sel-2','sel-3','sel-4','sel-5');
+    }
+
+    /* Draw stars for a preview value v (0 = unrated) */
     function draw(v){
       stars.forEach(function(s){
-        parseInt(s.getAttribute('data-v')) <= v
-          ? s.classList.add('sel')
-          : s.classList.remove('sel');
+        var sv = parseInt(s.getAttribute('data-v'));
+        clearStarClass(s);
+        if(sv <= v && v > 0){
+          s.classList.add('sel-' + v);
+        }
       });
+
+      /* Update bar colour class */
+      bar.className = 'rc-bar' + (v > 0 ? ' c' + v : '');
+
+      /* Update hint text colour class */
+      sh.className = 'shint' + (v > 0 ? ' c' + v + ' on' : '');
+
       if(v > 0){
         md.textContent = moods[v - 1];
         md.classList.add('on');
         sh.textContent = hints[lang][v];
-        sh.classList.add('on');
       } else {
         md.textContent = '😐';
         md.classList.remove('on');
         sh.textContent = '';
-        sh.classList.remove('on');
       }
     }
 
     stars.forEach(function(star){
       var v = parseInt(star.getAttribute('data-v'));
+
       star.addEventListener('mouseover', function(){ draw(v); });
       star.addEventListener('mouseout',  function(){ draw(ratings[g]); });
+
       star.addEventListener('click', function(){
         ratings[g] = v;
         draw(v);
@@ -718,9 +757,7 @@ body.ltr .ar{display:none}
     });
   });
 
-  /* ── Language switch ──
-     Physically moves #ltoggle into the correct grid column
-     so the logo stays centered regardless of toggle width.  */
+  /* ── Language switch ── */
   window.setLang = function(l){
     lang = l;
     var b       = document.body;
@@ -734,13 +771,13 @@ body.ltr .ar{display:none}
       b.setAttribute('dir','ltr');
       h.setAttribute('lang','en');
       h.setAttribute('dir','ltr');
-      dhLeft.appendChild(lt);          /* toggle → left column */
+      dhLeft.appendChild(lt);
     } else {
       b.classList.remove('ltr');
       b.setAttribute('dir','rtl');
       h.setAttribute('lang','ar');
       h.setAttribute('dir','rtl');
-      dhRight.appendChild(lt);         /* toggle → right column */
+      dhRight.appendChild(lt);
     }
 
     document.getElementById('bar').classList.toggle('active', l === 'ar');
@@ -763,7 +800,7 @@ body.ltr .ar{display:none}
 
   /* ── Confetti ── */
   function boom(){
-    var pal = ['#ff4500','#ff6a00','#a78bfa','#34d399','#60a5fa'];
+    var pal = ['#ef4444','#f97316','#facc15','#84cc16','#22c55e','#a78bfa','#60a5fa'];
     for(var i = 0; i < 60; i++){
       (function(){
         var el   = document.createElement('div');
@@ -775,7 +812,7 @@ body.ltr .ar{display:none}
         var ty   = Math.sin(ang * Math.PI / 180) * dist - 60;
         el.style.cssText =
           'width:'  + sz + 'px;height:' + sz + 'px;' +
-          'background:' + pal[Math.floor(Math.random() * 5)] + ';' +
+          'background:' + pal[Math.floor(Math.random() * pal.length)] + ';' +
           'left:calc(50% + ' + (Math.random() * 40 - 20) + 'px);' +
           'top:38%;' +
           '--tx:' + tx + 'px;--ty:' + ty + 'px;' +
@@ -818,7 +855,6 @@ body.ltr .ar{display:none}
       user_agent:     navigator.userAgent
     };
 
-    /* Fallback timeout in case Apps Script is unreachable */
     var fallback = setTimeout(function(){ showTY(); }, 6000);
 
     try{
