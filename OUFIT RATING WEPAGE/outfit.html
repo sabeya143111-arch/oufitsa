@@ -1,710 +1,686 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>قيّم تجربة التسوق مع أوتفيسا | Rate your Outfitsa experience</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #fff7ed 0, #f8fafc 45%, #e2e8f0 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #0f172a;
-      padding: 16px;
-      direction: rtl;
-    }
-    body.ltr {
-      direction: ltr;
-    }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Outfitsa – تقييم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-    .page-wrapper {
-      width: 100%;
-      max-width: 520px;
-      background: rgba(255, 255, 255, 0.96);
-      border-radius: 22px;
-      box-shadow:
-        0 24px 60px rgba(15, 23, 42, 0.32),
-        0 0 0 1px rgba(148, 163, 184, 0.18);
-      padding: 24px 22px 20px;
-      position: relative;
-      overflow: hidden;
-    }
+/* ── Animated background ── */
+html,body{
+  min-height:100vh;
+  font-family:'Inter',system-ui,sans-serif;
+  background:linear-gradient(-45deg,#fff7ed,#fef3c7,#ede9fe,#e0f2fe);
+  background-size:400% 400%;
+  animation:bgMove 12s ease infinite;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+@keyframes bgMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
 
-    .blob {
-      position: absolute;
-      border-radius: 999px;
-      filter: blur(24px);
-      opacity: 0.5;
-      z-index: -1;
-    }
-    .blob-1 {
-      width: 180px;
-      height: 180px;
-      background: #fed7aa;
-      top: -60px;
-      right: -40px;
-    }
-    .blob-2 {
-      width: 160px;
-      height: 160px;
-      background: #bfdbfe;
-      bottom: -60px;
-      left: -40px;
-    }
+/* ── Particles ── */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.pt{position:absolute;border-radius:50%;opacity:0.15;bottom:-30px;animation:rise linear infinite}
+@keyframes rise{
+  0%{transform:translateY(0) scale(1);opacity:.15}
+  85%{opacity:.07}
+  100%{transform:translateY(-110vh) scale(.3);opacity:0}
+}
 
-    .brand-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      gap: 10px;
-    }
-    .brand-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    body.ltr .brand-row {
-      flex-direction: row;
-    }
+/* ── Progress bar ── */
+.prog-wrap{
+  position:sticky;top:0;z-index:100;
+  padding:14px 16px 0;
+  max-width:576px;margin:0 auto;
+}
+.prog-pill{
+  background:rgba(255,255,255,0.75);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-radius:99px;
+  border:1px solid rgba(255,255,255,0.9);
+  padding:8px 16px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 4px 20px rgba(15,23,42,.07);
+}
+.prog-lbl{font-size:11.5px;font-weight:600;color:#64748b;white-space:nowrap;flex-shrink:0}
+.prog-track{flex:1;height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden}
+.prog-fill{
+  height:100%;border-radius:99px;
+  background:linear-gradient(90deg,#f97316,#fbbf24);
+  width:0%;
+  transition:width .5s cubic-bezier(.4,0,.2,1);
+}
+.prog-num{font-size:11.5px;font-weight:700;color:#f97316;min-width:30px;text-align:left}
+body:not(.ltr) .prog-num{text-align:right}
 
-    .brand-logo {
-      width: 38px;
-      height: 38px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #f97316, #fbbf24);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #0f172a;
-      font-weight: 800;
-      font-size: 20px;
-      box-shadow: 0 12px 26px rgba(249, 115, 22, 0.45);
-    }
-    .brand-text-main {
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-    .brand-text-sub {
-      font-size: 11px;
-      color: #64748b;
-    }
+/* ── Page shell ── */
+.page{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;
+  padding:12px 16px 64px;
+}
 
-    .order-pill {
-      font-size: 11px;
-      color: #0f172a;
-      background: rgba(248, 250, 252, 0.9);
-      border-radius: 999px;
-      padding: 4px 10px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      max-width: 200px;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+/* ── Main card ── */
+.card{
+  width:100%;max-width:560px;
+  background:rgba(255,255,255,0.92);
+  border-radius:28px;
+  box-shadow:0 32px 80px rgba(15,23,42,0.18);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  overflow:hidden;
+  margin-top:14px;
+}
 
-    /* Language toggle button */
-    .lang-toggle {
-      position: absolute;
-      top: 12px;
-      inset-inline-end: 16px;
-      font-size: 11px;
-      background: rgba(15, 23, 42, 0.03);
-      border-radius: 999px;
-      padding: 3px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      display: inline-flex;
-      gap: 2px;
-    }
-    .lang-toggle button {
-      border: none;
-      background: transparent;
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      cursor: pointer;
-      color: #64748b;
-    }
-    .lang-toggle button.active {
-      background: #0f172a;
-      color: #f9fafb;
-    }
+/* ── Dark header ── */
+.dh{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#0f172a,#1e293b,#0f172a);
+  padding:24px 26px 26px;
+}
+body.ltr .dh{direction:ltr}
+body:not(.ltr) .dh{direction:rtl}
+/* glows */
+.dh::before{
+  content:'';position:absolute;
+  width:300px;height:300px;top:-90px;right:-70px;
+  background:radial-gradient(circle,rgba(249,115,22,.22) 0%,transparent 68%);
+  pointer-events:none;
+}
+.dh::after{
+  content:'';position:absolute;
+  width:220px;height:220px;bottom:-60px;left:-50px;
+  background:radial-gradient(circle,rgba(251,191,36,.18) 0%,transparent 68%);
+  pointer-events:none;
+}
+/* top row */
+.dh-top{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;position:relative;z-index:2;gap:12px;
+}
+.brand-row{display:flex;align-items:center;gap:12px;min-width:0}
+.logo-img{height:44px;border-radius:10px;object-fit:contain;flex-shrink:0}
+.logo-fb{
+  width:44px;height:44px;border-radius:10px;
+  background:linear-gradient(135deg,#f97316,#fbbf24);
+  display:none;align-items:center;justify-content:center;
+  font-size:22px;font-weight:800;color:#fff;flex-shrink:0;
+}
+.logo-fb.show{display:flex}
+.brand-name{
+  font-size:17px;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:#fff;line-height:1.1;
+}
+.brand-sub{font-size:11.5px;color:rgba(255,255,255,.5);margin-top:3px}
+/* lang toggle */
+.lt{
+  display:flex;flex-shrink:0;
+  background:rgba(255,255,255,.1);
+  border-radius:99px;
+  border:1px solid rgba(255,255,255,.18);
+  overflow:hidden;
+}
+.lb{
+  padding:6px 13px;
+  font-size:12px;font-weight:600;
+  border:none;background:transparent;
+  color:rgba(255,255,255,.6);
+  cursor:pointer;border-radius:99px;
+  transition:all .2s;
+  font-family:'Inter',system-ui,sans-serif;
+  white-space:nowrap;
+}
+.lb.active{
+  background:linear-gradient(135deg,#f97316,#fbbf24);
+  color:#fff;
+  box-shadow:0 2px 10px rgba(249,115,22,.4);
+}
+/* order pill */
+.ord-pill{
+  display:none;
+  align-items:center;gap:6px;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.18);
+  color:rgba(255,255,255,.9);
+  font-size:12px;font-weight:600;
+  padding:5px 14px;border-radius:99px;
+  margin-bottom:14px;
+  position:relative;z-index:2;
+  width:fit-content;
+}
+.ord-pill.show{display:inline-flex}
+/* heading */
+.dh-h1{
+  font-size:clamp(16px,4vw,22px);
+  font-weight:700;color:#fff;
+  line-height:1.4;
+  position:relative;z-index:2;
+  margin-bottom:5px;
+}
+.dh-sub{
+  font-size:13px;
+  color:rgba(255,255,255,.6);
+  line-height:1.6;
+  position:relative;z-index:2;
+}
 
-    .heading-block {
-      margin-bottom: 18px;
-      margin-top: 6px;
-    }
-    .heading-block h1 {
-      font-size: 22px;
-      margin-bottom: 6px;
-    }
-    .heading-block p {
-      font-size: 13px;
-      color: #475569;
-      line-height: 1.45;
-    }
+/* ── Card body ── */
+.cb{
+  padding:22px 20px 26px;
+  display:flex;flex-direction:column;gap:15px;
+}
+body.ltr .cb{direction:ltr}
+body:not(.ltr) .cb{direction:rtl}
 
-    .steps-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 18px;
-      font-size: 11px;
-      color: #64748b;
-      flex-wrap: wrap;
-    }
-    .step-chip {
-      flex: 1;
-      min-width: 90px;
-      background: #f9fafb;
-      border-radius: 999px;
-      padding: 5px 9px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      border: 1px dashed #e5e7eb;
-    }
-    body.ltr .step-chip {
-      flex-direction: row;
-    }
-    .step-badge {
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      background: #fee2e2;
-      color: #b91c1c;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-    }
+/* ── Rating card ── */
+.rc{
+  background:#fff;
+  border-radius:18px;
+  border:2px solid #f1f5f9;
+  overflow:hidden;
+  transition:transform .2s,border-color .25s,box-shadow .25s;
+}
+.rc:hover{transform:translateY(-1px)}
+.rc.rated{
+  border-color:#fed7aa;
+  box-shadow:0 8px 30px rgba(249,115,22,.12);
+}
+.rc-bar{
+  height:3px;
+  background:linear-gradient(90deg,#f97316,#fbbf24);
+  transform:scaleX(0);
+  transition:transform .4s cubic-bezier(.4,0,.2,1);
+}
+body.ltr .rc-bar{transform-origin:left}
+body:not(.ltr) .rc-bar{transform-origin:right}
+.rc.rated .rc-bar{transform:scaleX(1)}
+.rc-inner{padding:18px 20px 15px}
+.rc-lbl{
+  display:flex;align-items:center;gap:8px;
+  font-size:13.5px;font-weight:600;color:#1e293b;
+  margin-bottom:14px;
+  justify-content:flex-end;
+}
+body.ltr .rc-lbl{justify-content:flex-start}
+.rdot{width:7px;height:7px;border-radius:50%;background:#f97316;flex-shrink:0}
 
-    .card {
-      background: rgba(248, 250, 252, 0.92);
-      border-radius: 16px;
-      padding: 14px 14px 12px;
-      border: 1px solid rgba(226, 232, 240, 0.9);
-      margin-bottom: 12px;
-    }
+/* stars + emoji row */
+.ser{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.sg{display:flex;gap:4px;direction:ltr;flex-wrap:nowrap}
+.star{
+  font-size:34px;cursor:pointer;color:#e2e8f0;
+  transition:transform .15s,color .15s,text-shadow .15s,filter .15s;
+  display:inline-block;line-height:1;
+  user-select:none;-webkit-user-select:none;
+}
+.star:hover{transform:scale(1.15)}
+.star.sel{
+  color:#f97316;
+  text-shadow:0 0 20px rgba(249,115,22,.8);
+  transform:translateY(-3px) scale(1.12);
+  filter:drop-shadow(0 4px 8px rgba(249,115,22,.4));
+}
+.star.burst{animation:burst .3s ease both}
+@keyframes burst{
+  0%{transform:translateY(-3px) scale(1.12)}
+  40%{transform:translateY(-6px) scale(1.4)}
+  100%{transform:translateY(-3px) scale(1.12)}
+}
+.mood{
+  font-size:26px;
+  filter:grayscale(1);opacity:.4;
+  transition:all .25s;flex-shrink:0;
+}
+.mood.on{filter:grayscale(0);opacity:1;transform:scale(1.2)}
+.shint{
+  font-size:12px;font-weight:500;color:#f97316;
+  text-align:center;min-height:16px;
+  opacity:0;transition:opacity .2s;
+}
+.shint.on{opacity:1}
 
-    .rating-header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 6px;
-      gap: 8px;
-    }
-    .rating-header-row span.label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #0f172a;
-    }
-    .rating-header-row span.hint {
-      font-size: 11px;
-      color: #94a3b8;
-      white-space: nowrap;
-    }
+/* ── Comment card ── */
+.cc{
+  background:#fff;border-radius:18px;
+  border:2px solid #f1f5f9;padding:18px 20px;
+}
+.cc-lbl{
+  display:flex;align-items:center;gap:8px;
+  font-size:13.5px;font-weight:600;color:#1e293b;
+  margin-bottom:11px;justify-content:flex-end;
+}
+body.ltr .cc-lbl{justify-content:flex-start}
+.opt{
+  font-size:11px;background:#f1f5f9;
+  color:#64748b;padding:2px 10px;
+  border-radius:99px;font-weight:400;
+}
+textarea{
+  width:100%;min-height:96px;
+  border:1.5px solid #e2e8f0;
+  border-radius:14px;padding:12px 14px;
+  font-size:14px;font-family:'Inter',system-ui,sans-serif;
+  color:#1e293b;resize:vertical;outline:none;
+  background:#fff;transition:border-color .2s,box-shadow .2s;
+  line-height:1.6;
+}
+body.ltr textarea{direction:ltr;text-align:left}
+body:not(.ltr) textarea{direction:rtl;text-align:right}
+textarea:focus{
+  border-color:#f97316;
+  box-shadow:0 0 0 3px rgba(249,115,22,.15);
+}
+textarea::placeholder{color:#cbd5e1}
 
-    .star-rating {
-      display: flex;
-      gap: 8px;
-      font-size: 30px;
-      margin-bottom: 4px;
-    }
-    .star {
-      cursor: pointer;
-      color: #e2e8f0;
-      text-shadow: none;
-      transition: color 0.18s ease, transform 0.18s ease, text-shadow 0.18s ease;
-    }
-    .star.active {
-      color: #fbbf24;
-      text-shadow: 0 0 16px rgba(251, 191, 36, 0.8);
-      transform: translateY(-2px) scale(1.06);
-    }
+/* ── Error ── */
+.err{
+  display:none;font-size:13px;
+  color:#ef4444;text-align:center;
+  background:#fff1f2;border-radius:12px;
+  padding:10px 14px;border:1px solid #fecdd3;
+}
+.err.show{display:block}
 
-    .live-rating-text {
-      font-size: 12px;
-      color: #64748b;
-    }
+/* ── Submit ── */
+.sbtn{
+  width:100%;
+  background:linear-gradient(135deg,#f97316,#fbbf24);
+  color:#fff;border:none;border-radius:99px;
+  font-size:15px;font-weight:700;padding:15px 30px;
+  cursor:pointer;
+  font-family:'Inter',system-ui,sans-serif;
+  box-shadow:0 16px 40px rgba(249,115,22,.45);
+  animation:pulse 2.5s ease-in-out infinite;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  transition:transform .2s,filter .2s,opacity .2s;
+}
+.sbtn:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.05)}
+.sbtn:active:not(:disabled){transform:scale(.98)}
+.sbtn:disabled{opacity:.7;cursor:not-allowed;animation:none}
+@keyframes pulse{
+  0%,100%{box-shadow:0 16px 40px rgba(249,115,22,.45)}
+  50%{box-shadow:0 20px 60px rgba(249,115,22,.65)}
+}
+.spin{
+  display:none;width:18px;height:18px;
+  border:2.5px solid rgba(255,255,255,.4);
+  border-top-color:#fff;border-radius:50%;
+  animation:sp .7s linear infinite;flex-shrink:0;
+}
+.spin.show{display:block}
+@keyframes sp{to{transform:rotate(360deg)}}
 
-    .chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
-    }
-    .chip {
-      padding: 4px 8px;
-      font-size: 11px;
-      border-radius: 999px;
-      border: 1px solid #e5e7eb;
-      background: #ffffff;
-      color: #475569;
-      cursor: pointer;
-      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-    }
-    .chip.selected {
-      background: rgba(249, 115, 22, 0.08);
-      border-color: #f97316;
-      color: #b45309;
-    }
+/* ── Privacy ── */
+.priv{text-align:center;font-size:12px;color:#94a3b8;line-height:1.5}
 
-    .card textarea {
-      width: 100%;
-      min-height: 80px;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-      padding: 8px 11px;
-      font-size: 13px;
-      outline: none;
-      resize: vertical;
-      background: #ffffff;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
-    }
-    .card textarea:focus {
-      border-color: #f97316;
-      box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.20);
-      background: #ffffff;
-    }
+/* ── Thank you ── */
+.ty{
+  display:none;flex-direction:column;align-items:center;
+  text-align:center;padding:56px 30px 48px;
+  animation:fuUp .45s ease both;
+}
+.ty.show{display:flex}
+@keyframes fuUp{
+  from{opacity:0;transform:translateY(24px) scale(.96)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.ty-ring{
+  width:88px;height:88px;border-radius:50%;
+  background:linear-gradient(135deg,#fff7ed,#fef3c7);
+  display:flex;align-items:center;justify-content:center;
+  font-size:42px;
+  box-shadow:0 16px 40px rgba(249,115,22,.25);
+  margin-bottom:20px;
+  animation:starIn .55s cubic-bezier(.18,.89,.32,1.28) both;
+}
+@keyframes starIn{
+  from{transform:scale(0) rotate(-180deg);opacity:0}
+  to{transform:scale(1) rotate(0deg);opacity:1}
+}
+.ty-h{font-size:22px;font-weight:800;color:#1e293b;margin-bottom:12px}
+.ty-p{font-size:14px;color:#64748b;line-height:1.75;max-width:320px;margin-bottom:26px}
+.ty-a{
+  display:inline-block;
+  border:2px solid #f97316;color:#f97316;
+  text-decoration:none;border-radius:99px;
+  padding:12px 36px;font-size:14px;font-weight:700;
+  transition:all .2s;font-family:'Inter',system-ui,sans-serif;
+}
+.ty-a:hover{
+  background:linear-gradient(135deg,#f97316,#fbbf24);
+  border-color:transparent;color:#fff;
+  box-shadow:0 10px 28px rgba(249,115,22,.35);
+  transform:translateY(-2px);
+}
 
-    .footer-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 10px;
-      gap: 10px;
-    }
-    .submit-btn {
-      background: linear-gradient(135deg, #f97316, #fbbf24);
-      color: #ffffff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 16px 28px rgba(249, 115, 22, 0.45);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
-      white-space: nowrap;
-    }
-    .submit-btn span.icon {
-      font-size: 16px;
-    }
-    .submit-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 20px 32px rgba(249, 115, 22, 0.50);
-      filter: brightness(1.03);
-    }
-    .submit-btn:active {
-      transform: translateY(0);
-      box-shadow: 0 10px 20px rgba(249, 115, 22, 0.40);
-    }
+/* ── Confetti ── */
+.cf{
+  position:fixed;border-radius:3px;
+  pointer-events:none;z-index:9999;
+  animation:cfly 1.5s ease-out forwards;
+}
+@keyframes cfly{
+  0%{transform:translate(0,0) rotate(0deg) scale(1);opacity:1}
+  100%{transform:translate(var(--tx),var(--ty)) rotate(var(--r)) scale(.3);opacity:0}
+}
 
-    .note-text {
-      font-size: 11px;
-      color: #94a3b8;
-      line-height: 1.4;
-    }
+/* ── Bilingual ── */
+.en{display:none}
+.ar{display:inline}
+body.ltr .en{display:inline}
+body.ltr .ar{display:none}
 
-    .thankyou-state {
-      display: none;
-      text-align: center;
-      padding: 20px 8px 6px;
-    }
-    .thankyou-icon {
-      width: 58px;
-      height: 58px;
-      border-radius: 999px;
-      margin: 0 auto 14px;
-      background: radial-gradient(circle at 30% 0, #fefce8, #f97316);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fefce8;
-      font-size: 30px;
-      box-shadow: 0 18px 40px rgba(234, 88, 12, 0.7);
-    }
-    .thankyou-state h2 {
-      font-size: 20px;
-      margin-bottom: 6px;
-    }
-    .thankyou-state p {
-      font-size: 13px;
-      color: #475569;
-      margin-bottom: 10px;
-    }
-    .thankyou-state .tiny {
-      font-size: 11px;
-      color: #94a3b8;
-    }
-    .back-link {
-      margin-top: 12px;
-      font-size: 12px;
-    }
-    .back-link a {
-      color: #f97316;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    @media (max-width: 480px) {
-      .page-wrapper {
-        padding: 20px 16px 16px;
-        border-radius: 18px;
-      }
-      .heading-block h1 {
-        font-size: 20px;
-      }
-    }
-
-    /* language visibility */
-    .lang-ar {
-      display: inline;
-    }
-    .lang-en {
-      display: none;
-    }
-    body.ltr .lang-ar {
-      display: none;
-    }
-    body.ltr .lang-en {
-      display: inline;
-    }
-  </style>
+/* ── Mobile ── */
+@media(max-width:480px){
+  .dh{padding:18px 16px 20px}
+  .cb{padding:16px 14px 20px}
+  .star{font-size:30px}
+  .rc-inner{padding:14px 15px 12px}
+  .ty{padding:40px 20px 36px}
+}
+</style>
 </head>
 <body>
-  <div class="page-wrapper">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
 
-    <!-- Language toggle -->
-    <div class="lang-toggle">
-      <button id="btnAr" class="active">عربي</button>
-      <button id="btnEn">English</button>
-    </div>
+<!-- Particles -->
+<div class="particles" id="ptc"></div>
 
-    <!-- MAIN FORM STATE -->
-    <div id="formState">
-      <!-- Brand header -->
+<!-- Progress bar -->
+<div class="prog-wrap">
+  <div class="prog-pill">
+    <span class="prog-lbl"><span class="ar">التقدم</span><span class="en">Progress</span></span>
+    <div class="prog-track"><div class="prog-fill" id="pf"></div></div>
+    <span class="prog-num" id="pn">0%</span>
+  </div>
+</div>
+
+<div class="page">
+<div class="card" id="main-card">
+
+  <!-- Dark header -->
+  <div class="dh">
+    <div class="dh-top">
       <div class="brand-row">
-        <div class="brand-left">
-          <div class="brand-logo">O</div>
-          <div>
-            <div class="brand-text-main">Outfitsa</div>
-            <div class="brand-text-sub">
-              <span class="lang-ar">أزياء · السعودية</span>
-              <span class="lang-en">Fashion · Saudi Arabia</span>
-            </div>
-          </div>
-        </div>
-        <div class="order-pill" id="orderPill">
-          <span class="lang-ar">طلب:</span>
-          <span class="lang-en">Order:</span>
-          <span id="orderIdText">N/A</span>
+        <img class="logo-img" src="YOUR_LOGO_URL_HERE" alt="Outfitsa"
+          onerror="this.style.display='none';document.getElementById('lfb').classList.add('show')"/>
+        <div class="logo-fb" id="lfb">O</div>
+        <div>
+          <div class="brand-name">Outfitsa</div>
+          <div class="brand-sub"><span class="ar">أزياء · السعودية</span><span class="en">Fashion · Saudi Arabia</span></div>
         </div>
       </div>
-
-      <!-- Heading -->
-      <div class="heading-block">
-        <h1>
-          <span class="lang-ar">كيف كانت تجربتك مع أوتفيسا؟</span>
-          <span class="lang-en">How was your experience?</span>
-        </h1>
-        <p>
-          <span class="lang-ar">دقيقتان فقط. تقييمك يساعدنا في تحسين المنتجات، التوصيل، وخدمة العملاء.</span>
-          <span class="lang-en">1–2 minutes only. Your feedback helps us improve products, delivery and overall service.</span>
-        </p>
-      </div>
-
-      <!-- Steps -->
-      <div class="steps-row">
-        <div class="step-chip">
-          <div class="step-badge">1</div>
-          <div>
-            <span class="lang-ar">اختر عدد النجوم</span>
-            <span class="lang-en">Tap the stars</span>
-          </div>
-        </div>
-        <div class="step-chip">
-          <div class="step-badge">2</div>
-          <div>
-            <span class="lang-ar">اكتب ملاحظة (اختياري)</span>
-            <span class="lang-en">Write a note (optional)</span>
-          </div>
-        </div>
-        <div class="step-chip">
-          <div class="step-badge">3</div>
-          <div>
-            <span class="lang-ar">أرسل التقييم</span>
-            <span class="lang-en">Submit & you’re done</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card: rating -->
-      <div class="card">
-        <div class="rating-header-row">
-          <span class="label">
-            <span class="lang-ar">قيّم تجربتك بشكل عام</span>
-            <span class="lang-en">Rate your overall experience</span>
-          </span>
-          <span class="hint" id="ratingHint">
-            <span class="lang-ar">اختر من ١ إلى ٥ نجوم</span>
-            <span class="lang-en">Select 1–5 stars</span>
-          </span>
-        </div>
-        <div class="star-rating" id="starRating">
-          <span class="star" data-value="1">&#9733;</span>
-          <span class="star" data-value="2">&#9733;</span>
-          <span class="star" data-value="3">&#9733;</span>
-          <span class="star" data-value="4">&#9733;</span>
-          <span class="star" data-value="5">&#9733;</span>
-        </div>
-        <div class="live-rating-text" id="liveRatingText">
-          <span class="lang-ar">لم يتم اختيار التقييم بعد</span>
-          <span class="lang-en">Not selected yet</span>
-        </div>
-        <div class="chip-row" id="chipRow">
-          <button type="button" class="chip" data-chip="product">
-            <span class="lang-ar">أحببت المنتج</span>
-            <span class="lang-en">Loved the product</span>
-          </button>
-          <button type="button" class="chip" data-chip="delivery">
-            <span class="lang-ar">توصيل سريع</span>
-            <span class="lang-en">Fast delivery</span>
-          </button>
-          <button type="button" class="chip" data-chip="support">
-            <span class="lang-ar">خدمة عملاء جيدة</span>
-            <span class="lang-en">Good support</span>
-          </button>
-          <button type="button" class="chip" data-chip="website">
-            <span class="lang-ar">موقع سهل الاستخدام</span>
-            <span class="lang-en">Easy website</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Card: comment -->
-      <div class="card">
-        <div class="rating-header-row">
-          <span class="label">
-            <span class="lang-ar">ما الذي يمكننا تحسينه؟</span>
-            <span class="lang-en">Anything we can improve?</span>
-          </span>
-          <span class="hint">
-            <span class="lang-ar">اختياري لكنه مفيد لنا</span>
-            <span class="lang-en">Optional but very helpful</span>
-          </span>
-        </div>
-        <textarea id="commentBox"
-          placeholder="يمكنك الكتابة بالعربية أو الإنجليزية أو أي لغة تفضّلها."></textarea>
-      </div>
-
-      <!-- Footer actions -->
-      <div class="footer-row">
-        <button class="submit-btn" id="submitBtn">
-          <span class="icon">➤</span>
-          <span class="lang-ar">إرسال التقييم</span>
-          <span class="lang-en">Send feedback</span>
-        </button>
-        <div class="note-text">
-          <span class="lang-ar">لن نشارك بياناتك الشخصية. نستخدم التقييم لتحسين تجربة أوتفيسا فقط.</span>
-          <span class="lang-en">We will never share your personal details. Feedback is only used to improve Outfitsa.</span>
-        </div>
+      <div class="lt">
+        <button class="lb active" id="bar" onclick="setLang('ar')">عربي</button>
+        <button class="lb" id="ben" onclick="setLang('en')">English</button>
       </div>
     </div>
 
-    <!-- THANK YOU STATE -->
-    <div id="thankyouState" class="thankyou-state">
-      <div class="thankyou-icon">★</div>
-      <h2>
-        <span class="lang-ar">شكرًا لتقييمك!</span>
-        <span class="lang-en">Thank you for your feedback!</span>
-      </h2>
-      <p>
-        <span class="lang-ar">تم استلام تقييمك. هذا يساعدنا على تقديم تجربة أفضل لك ولغيرك من العملاء في المرة القادمة.</span>
-        <span class="lang-en">Your rating has been received. It helps us give a better experience to you and other customers next time.</span>
-      </p>
-      <div class="tiny">
-        <span class="lang-ar">إذا رغبت في تعديل تقييمك، يمكنك التواصل مع خدمة العملاء.</span>
-        <span class="lang-en">If you want to update this feedback later, you can contact our customer service.</span>
+    <div class="ord-pill" id="opill">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      <span class="ar">رقم الطلب:</span><span class="en">Order:</span>
+      <span id="oval"></span>
+    </div>
+
+    <div class="dh-h1"><span class="ar">كيف كانت تجربتك مع أوتفيسا؟</span><span class="en">How was your Outfitsa experience?</span></div>
+    <div class="dh-sub"><span class="ar">بضع ثوانٍ — تقييمك يساعدنا على التحسين المستمر.</span><span class="en">Just a moment — your feedback helps us improve continuously.</span></div>
+  </div>
+
+  <!-- Form body -->
+  <div class="cb" id="fb">
+
+    <!-- Rating card: Overall -->
+    <div class="rc" id="rc-overall">
+      <div class="rc-bar"></div>
+      <div class="rc-inner">
+        <div class="rc-lbl"><span class="ar">قيّم التجربة العامة</span><span class="en">Rate Overall Experience</span><div class="rdot"></div></div>
+        <div class="ser">
+          <div class="sg" id="sg-overall">
+            <span class="star" data-g="overall" data-v="1">★</span>
+            <span class="star" data-g="overall" data-v="2">★</span>
+            <span class="star" data-g="overall" data-v="3">★</span>
+            <span class="star" data-g="overall" data-v="4">★</span>
+            <span class="star" data-g="overall" data-v="5">★</span>
+          </div>
+          <div class="mood" id="md-overall">😐</div>
+        </div>
+        <div class="shint" id="sh-overall"></div>
       </div>
-      <div class="back-link">
-        <a href="https://outfitsa.co/en">
-          <span class="lang-ar">الرجوع إلى موقع أوتفيسا</span>
-          <span class="lang-en">Back to Outfitsa</span>
-        </a>
+    </div>
+
+    <!-- Rating card: Service -->
+    <div class="rc" id="rc-service">
+      <div class="rc-bar"></div>
+      <div class="rc-inner">
+        <div class="rc-lbl"><span class="ar">قيّم خدمة العملاء</span><span class="en">Rate our Service</span><div class="rdot"></div></div>
+        <div class="ser">
+          <div class="sg" id="sg-service">
+            <span class="star" data-g="service" data-v="1">★</span>
+            <span class="star" data-g="service" data-v="2">★</span>
+            <span class="star" data-g="service" data-v="3">★</span>
+            <span class="star" data-g="service" data-v="4">★</span>
+            <span class="star" data-g="service" data-v="5">★</span>
+          </div>
+          <div class="mood" id="md-service">😐</div>
+        </div>
+        <div class="shint" id="sh-service"></div>
       </div>
+    </div>
+
+    <!-- Rating card: Product -->
+    <div class="rc" id="rc-product">
+      <div class="rc-bar"></div>
+      <div class="rc-inner">
+        <div class="rc-lbl"><span class="ar">قيّم المنتج</span><span class="en">Rate the Product</span><div class="rdot"></div></div>
+        <div class="ser">
+          <div class="sg" id="sg-product">
+            <span class="star" data-g="product" data-v="1">★</span>
+            <span class="star" data-g="product" data-v="2">★</span>
+            <span class="star" data-g="product" data-v="3">★</span>
+            <span class="star" data-g="product" data-v="4">★</span>
+            <span class="star" data-g="product" data-v="5">★</span>
+          </div>
+          <div class="mood" id="md-product">😐</div>
+        </div>
+        <div class="shint" id="sh-product"></div>
+      </div>
+    </div>
+
+    <!-- Comment -->
+    <div class="cc">
+      <div class="cc-lbl">
+        <span class="opt"><span class="ar">اختياري</span><span class="en">optional</span></span>
+        <span class="ar">اترك تعليقاً</span><span class="en">Leave a Comment</span>
+      </div>
+      <textarea id="cmt" rows="4"></textarea>
+    </div>
+
+    <!-- Error -->
+    <div class="err" id="errmsg">
+      <span class="ar">⚠️ يرجى تقييم جميع الحقول الثلاثة قبل الإرسال.</span>
+      <span class="en">⚠️ Please rate all three categories before submitting.</span>
+    </div>
+
+    <!-- Submit -->
+    <button class="sbtn" id="sbtn" onclick="handleSubmit()">
+      <div class="spin" id="spin"></div>
+      <span id="btxt"><span class="ar">إرسال التقييم ➤</span><span class="en">Send Feedback ➤</span></span>
+    </button>
+
+    <!-- Privacy -->
+    <div class="priv">
+      🔒 <span class="ar">بياناتك خاصة. تُستخدم فقط لتحسين أوتفيسا.</span>
+      <span class="en">Your data is private. Used only to improve Outfitsa.</span>
     </div>
   </div>
 
-  <script>
-    // Read order id from URL: ?order=SO1234
-    const params = new URLSearchParams(window.location.search);
-    const orderId = params.get("order") || "N/A";
-    document.getElementById("orderIdText").textContent = orderId;
+  <!-- Thank you -->
+  <div class="ty" id="ty">
+    <div class="ty-ring">⭐</div>
+    <div class="ty-h"><span class="ar">شكراً لتقييمك! </span><span class="en">Thank you for your feedback! </span></div>
+    <p class="ty-p">
+      <span class="ar">تم استلام تقييمك بنجاح. نقدّر وقتك ومساهمتك في تحسين تجربة التسوق في أوتفيسا.</span>
+      <span class="en">Your feedback has been received. We appreciate your time and contribution to improving the Outfitsa shopping experience.</span>
+    </p>
+    <a class="ty-a" href="https://outfitsa.co/en" target="_top">
+      <span class="ar">العودة إلى المتجر</span><span class="en">Back to Store</span>
+    </a>
+  </div>
 
-    const stars = document.querySelectorAll(".star");
-    const liveRatingText = document.getElementById("liveRatingText");
-    const ratingHint = document.getElementById("ratingHint");
-    const chips = document.querySelectorAll(".chip");
-    const commentBox = document.getElementById("commentBox");
-    const submitBtn = document.getElementById("submitBtn");
-    const formState = document.getElementById("formState");
-    const thankyouState = document.getElementById("thankyouState");
+</div><!-- /card -->
+</div><!-- /page -->
 
-    const btnAr = document.getElementById("btnAr");
-    const btnEn = document.getElementById("btnEn");
+<script>
+(function(){
+  /* particles */
+  var pc=document.getElementById('ptc');
+  var cols=['#f97316','#fbbf24','#a78bfa','#34d399','#60a5fa'];
+  for(var i=0;i<24;i++){
+    var el=document.createElement('div');
+    el.className='pt';
+    var s=Math.random()*8+3;
+    el.style.cssText='width:'+s+'px;height:'+s+'px;left:'+Math.random()*100+'%;background:'+cols[i%5]+';animation-duration:'+(Math.random()*14+7)+'s;animation-delay:'+Math.random()*14+'s';
+    pc.appendChild(el);
+  }
 
-    let selectedRating = 0;
+  /* state */
+  var lang='ar';
+  var ratings={overall:0,service:0,product:0};
+  var groups=['overall','service','product'];
+  var moods=['😞','😐','🙂','😊','🤩'];
+  var hints={ar:['','سيء جداً','ضعيف','جيد','جيد جداً','ممتاز'],en:['','Terrible','Poor','Good','Very Good','Excellent']};
 
-    // Language switch
-    function setLang(lang) {
-      const body = document.body;
-      if (lang === "ar") {
-        body.classList.remove("ltr");
-        document.documentElement.lang = "ar";
-        document.documentElement.dir = "rtl";
-        btnAr.classList.add("active");
-        btnEn.classList.remove("active");
-      } else {
-        body.classList.add("ltr");
-        document.documentElement.lang = "en";
-        document.documentElement.dir = "ltr";
-        btnEn.classList.add("active");
-        btnAr.classList.remove("active");
-      }
+  /* order */
+  var params=new URLSearchParams(window.location.search);
+  var orderId=params.get('order')||'';
+  if(orderId){
+    document.getElementById('oval').textContent=orderId;
+    document.getElementById('opill').classList.add('show');
+  }
+
+  /* progress */
+  function upProg(){
+    var d=groups.filter(function(g){return ratings[g]>0}).length;
+    var p=Math.round(d/3*100);
+    document.getElementById('pf').style.width=p+'%';
+    document.getElementById('pn').textContent=p+'%';
+  }
+
+  /* stars */
+  groups.forEach(function(g){
+    var sg=document.getElementById('sg-'+g);
+    var stars=sg.querySelectorAll('.star');
+    var md=document.getElementById('md-'+g);
+    var sh=document.getElementById('sh-'+g);
+    var rc=document.getElementById('rc-'+g);
+
+    function draw(v){
+      stars.forEach(function(s){
+        var sv=parseInt(s.getAttribute('data-v'));
+        sv<=v?s.classList.add('sel'):s.classList.remove('sel');
+      });
+      if(v>0){md.textContent=moods[v-1];md.classList.add('on');sh.textContent=hints[lang][v];sh.classList.add('on')}
+      else{md.textContent='😐';md.classList.remove('on');sh.textContent='';sh.classList.remove('on')}
     }
 
-    btnAr.addEventListener("click", () => setLang("ar"));
-    btnEn.addEventListener("click", () => setLang("en"));
-
-    // Default Arabic
-    setLang("ar");
-
-    // Star logic
-    stars.forEach((star) => {
-      star.addEventListener("click", () => {
-        selectedRating = Number(star.dataset.value);
-        stars.forEach((s) => s.classList.remove("active"));
-        stars.forEach((s) => {
-          if (Number(s.dataset.value) <= selectedRating) {
-            s.classList.add("active");
-          }
-        });
-
-        // Update text for both languages
-        liveRatingText.innerHTML =
-          `<span class="lang-ar">اخترت ${selectedRating} من ٥</span>` +
-          `<span class="lang-en">You selected ${selectedRating} out of 5</span>`;
-
-        ratingHint.innerHTML =
-          `<span class="lang-ar">شكرًا لك، يمكنك إضافة ملاحظة إذا أحببت.</span>` +
-          `<span class="lang-en">Thank you, you can also add a short comment.</span>`;
-      });
-
-      star.addEventListener("mouseenter", () => {
-        const hoverVal = Number(star.dataset.value);
-        stars.forEach((s) => s.classList.remove("active"));
-        stars.forEach((s) => {
-          if (Number(s.dataset.value) <= hoverVal) {
-            s.classList.add("active");
-          }
-        });
-        liveRatingText.innerHTML =
-          `<span class="lang-ar">تقييم: ${hoverVal} من ٥</span>` +
-          `<span class="lang-en">Rating: ${hoverVal} / 5</span>`;
-      });
-
-      star.addEventListener("mouseleave", () => {
-        stars.forEach((s) => s.classList.remove("active"));
-        if (selectedRating > 0) {
-          stars.forEach((s) => {
-            if (Number(s.dataset.value) <= selectedRating) {
-              s.classList.add("active");
-            }
-          });
-          liveRatingText.innerHTML =
-            `<span class="lang-ar">اخترت ${selectedRating} من ٥</span>` +
-            `<span class="lang-en">You selected ${selectedRating} out of 5</span>`;
-        } else {
-          liveRatingText.innerHTML =
-            `<span class="lang-ar">لم يتم اختيار التقييم بعد</span>` +
-            `<span class="lang-en">Not selected yet</span>`;
-        }
+    stars.forEach(function(star){
+      var v=parseInt(star.getAttribute('data-v'));
+      star.addEventListener('mouseover',function(){draw(v)});
+      star.addEventListener('mouseout',function(){draw(ratings[g])});
+      star.addEventListener('click',function(){
+        ratings[g]=v;draw(v);
+        rc.classList.add('rated');
+        document.getElementById('errmsg').classList.remove('show');
+        star.classList.add('burst');
+        star.addEventListener('animationend',function(){star.classList.remove('burst')},{once:true});
+        upProg();
       });
     });
+  });
 
-    // Chips
-    chips.forEach((chip) => {
-      chip.addEventListener("click", () => {
-        chip.classList.toggle("selected");
-      });
+  /* lang */
+  window.setLang=function(l){
+    lang=l;
+    var b=document.body,h=document.documentElement;
+    if(l==='en'){b.classList.add('ltr');b.setAttribute('dir','ltr');h.setAttribute('lang','en');h.setAttribute('dir','ltr')}
+    else{b.classList.remove('ltr');b.setAttribute('dir','rtl');h.setAttribute('lang','ar');h.setAttribute('dir','rtl')}
+    document.getElementById('bar').classList.toggle('active',l==='ar');
+    document.getElementById('ben').classList.toggle('active',l==='en');
+    var ta=document.getElementById('cmt');
+    ta.placeholder=l==='ar'?'يمكنك الكتابة بالعربية أو الإنجليزية...':'Write in Arabic or English...';
+    groups.forEach(function(g){
+      var sh=document.getElementById('sh-'+g);
+      if(ratings[g]>0)sh.textContent=hints[l][ratings[g]];
     });
+  };
+  document.getElementById('cmt').placeholder='يمكنك الكتابة بالعربية أو الإنجليزية...';
 
-    // Submit
-    submitBtn.addEventListener("click", () => {
-      if (!selectedRating) {
-        alert(document.body.classList.contains("ltr")
-          ? "Please select at least 1 star rating."
-          : "الرجاء اختيار التقييم (عدد النجوم) أولاً.");
-        return;
-      }
+  /* confetti */
+  function boom(){
+    var pal=['#f97316','#fbbf24','#a78bfa','#34d399','#60a5fa'];
+    for(var i=0;i<50;i++){
+      (function(){
+        var el=document.createElement('div');
+        el.className='cf';
+        var sz=Math.random()*6+6;
+        var ang=Math.random()*360;
+        var dist=100+Math.random()*200;
+        var tx=Math.cos(ang*Math.PI/180)*dist;
+        var ty=Math.sin(ang*Math.PI/180)*dist-60;
+        el.style.cssText='width:'+sz+'px;height:'+sz+'px;background:'+pal[Math.floor(Math.random()*5)]+';left:calc(50% + '+(Math.random()*40-20)+'px);top:38%;--tx:'+tx+'px;--ty:'+ty+'px;--r:'+(Math.random()*720-360)+'deg;animation-delay:'+Math.random()*0.25+'s;animation-duration:'+(1.2+Math.random()*0.5)+'s;border-radius:'+(Math.random()>.5?'50%':'3px');
+        document.body.appendChild(el);
+        setTimeout(function(){el.remove()},2200);
+      })();
+    }
+  }
 
-      const selectedChips = [];
-      chips.forEach((chip) => {
-        if (chip.classList.contains("selected")) {
-          selectedChips.push(chip.dataset.chip);
-        }
-      });
+  /* show thank you */
+  function showTY(){
+    document.getElementById('fb').style.display='none';
+    document.getElementById('ty').classList.add('show');
+    boom();
+  }
 
-      const payload = {
-        order_id: orderId,
-        rating: selectedRating,
-        tags: selectedChips,
-        comment: commentBox.value.trim(),
-      };
+  /* submit */
+  window.handleSubmit=function(){
+    if(!ratings.overall||!ratings.service||!ratings.product){
+      var e=document.getElementById('errmsg');
+      e.classList.add('show');
+      e.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+    var btn=document.getElementById('sbtn');
+    btn.disabled=true;
+    document.getElementById('spin').classList.add('show');
 
-      console.log("Feedback payload:", payload);
+    var payload={
+      order_id:orderId,
+      rating_overall:ratings.overall,
+      rating_service:ratings.service,
+      rating_product:ratings.product,
+      comment:document.getElementById('cmt').value.trim(),
+      user_agent:navigator.userAgent
+    };
 
-      // TODO: replace with real API call when backend ready.
-      /*
-      fetch("https://outfitsa.co/api/save-feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-        .then((res) => res.json())
-        .then(() => {
-          formState.style.display = "none";
-          thankyouState.style.display = "block";
-        })
-        .catch(() => {
-          alert(document.body.classList.contains("ltr")
-            ? "Something went wrong. Please try again."
-            : "حدث خطأ ما، حاول مرة أخرى.");
-        });
-      */
+    var fb=setTimeout(function(){showTY()},6000);
+    try{
+      google.script.run
+        .withSuccessHandler(function(){clearTimeout(fb);showTY()})
+        .withFailureHandler(function(){clearTimeout(fb);showTY()})
+        .saveFeedback(payload);
+    }catch(ex){clearTimeout(fb);setTimeout(showTY,600)}
+  };
 
-      // Demo: directly show thank you
-      formState.style.display = "none";
-      thankyouState.style.display = "block";
-    });
-  </script>
+  upProg();
+})();
+</script>
 </body>
 </html>
+
