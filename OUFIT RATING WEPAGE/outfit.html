@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>قيّم تجربة التسوق مع أوتفيسا | Rate your Outfitsa experience</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #fff7ed 0, #f8fafc 45%, #e2e8f0 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0f172a;
+      padding: 16px;
+      direction: rtl;
+    }
+    body.ltr {
+      direction: ltr;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 520px;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 22px;
+      box-shadow:
+        0 24px 60px rgba(15, 23, 42, 0.32),
+        0 0 0 1px rgba(148, 163, 184, 0.18);
+      padding: 24px 22px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(24px);
+      opacity: 0.5;
+      z-index: -1;
+    }
+    .blob-1 {
+      width: 180px;
+      height: 180px;
+      background: #fed7aa;
+      top: -60px;
+      right: -40px;
+    }
+    .blob-2 {
+      width: 160px;
+      height: 160px;
+      background: #bfdbfe;
+      bottom: -60px;
+      left: -40px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 10px;
+    }
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    body.ltr .brand-row {
+      flex-direction: row;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #f97316, #fbbf24);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 20px;
+      box-shadow: 0 12px 26px rgba(249, 115, 22, 0.45);
+    }
+    .brand-text-main {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .brand-text-sub {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .order-pill {
+      font-size: 11px;
+      color: #0f172a;
+      background: rgba(248, 250, 252, 0.9);
+      border-radius: 999px;
+      padding: 4px 10px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      max-width: 200px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Language toggle button */
+    .lang-toggle {
+      position: absolute;
+      top: 12px;
+      inset-inline-end: 16px;
+      font-size: 11px;
+      background: rgba(15, 23, 42, 0.03);
+      border-radius: 999px;
+      padding: 3px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      display: inline-flex;
+      gap: 2px;
+    }
+    .lang-toggle button {
+      border: none;
+      background: transparent;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      cursor: pointer;
+      color: #64748b;
+    }
+    .lang-toggle button.active {
+      background: #0f172a;
+      color: #f9fafb;
+    }
+
+    .heading-block {
+      margin-bottom: 18px;
+      margin-top: 6px;
+    }
+    .heading-block h1 {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+    .heading-block p {
+      font-size: 13px;
+      color: #475569;
+      line-height: 1.45;
+    }
+
+    .steps-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      font-size: 11px;
+      color: #64748b;
+      flex-wrap: wrap;
+    }
+    .step-chip {
+      flex: 1;
+      min-width: 90px;
+      background: #f9fafb;
+      border-radius: 999px;
+      padding: 5px 9px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px dashed #e5e7eb;
+    }
+    body.ltr .step-chip {
+      flex-direction: row;
+    }
+    .step-badge {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: #fee2e2;
+      color: #b91c1c;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .card {
+      background: rgba(248, 250, 252, 0.92);
+      border-radius: 16px;
+      padding: 14px 14px 12px;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      margin-bottom: 12px;
+    }
+
+    .rating-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      gap: 8px;
+    }
+    .rating-header-row span.label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .rating-header-row span.hint {
+      font-size: 11px;
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+
+    .star-rating {
+      display: flex;
+      gap: 8px;
+      font-size: 30px;
+      margin-bottom: 4px;
+    }
+    .star {
+      cursor: pointer;
+      color: #e2e8f0;
+      text-shadow: none;
+      transition: color 0.18s ease, transform 0.18s ease, text-shadow 0.18s ease;
+    }
+    .star.active {
+      color: #fbbf24;
+      text-shadow: 0 0 16px rgba(251, 191, 36, 0.8);
+      transform: translateY(-2px) scale(1.06);
+    }
+
+    .live-rating-text {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .chip {
+      padding: 4px 8px;
+      font-size: 11px;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      color: #475569;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+    .chip.selected {
+      background: rgba(249, 115, 22, 0.08);
+      border-color: #f97316;
+      color: #b45309;
+    }
+
+    .card textarea {
+      width: 100%;
+      min-height: 80px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      padding: 8px 11px;
+      font-size: 13px;
+      outline: none;
+      resize: vertical;
+      background: #ffffff;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+    .card textarea:focus {
+      border-color: #f97316;
+      box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.20);
+      background: #ffffff;
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      gap: 10px;
+    }
+    .submit-btn {
+      background: linear-gradient(135deg, #f97316, #fbbf24);
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 16px 28px rgba(249, 115, 22, 0.45);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+      white-space: nowrap;
+    }
+    .submit-btn span.icon {
+      font-size: 16px;
+    }
+    .submit-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 32px rgba(249, 115, 22, 0.50);
+      filter: brightness(1.03);
+    }
+    .submit-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 10px 20px rgba(249, 115, 22, 0.40);
+    }
+
+    .note-text {
+      font-size: 11px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    .thankyou-state {
+      display: none;
+      text-align: center;
+      padding: 20px 8px 6px;
+    }
+    .thankyou-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 999px;
+      margin: 0 auto 14px;
+      background: radial-gradient(circle at 30% 0, #fefce8, #f97316);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fefce8;
+      font-size: 30px;
+      box-shadow: 0 18px 40px rgba(234, 88, 12, 0.7);
+    }
+    .thankyou-state h2 {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+    .thankyou-state p {
+      font-size: 13px;
+      color: #475569;
+      margin-bottom: 10px;
+    }
+    .thankyou-state .tiny {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    .back-link {
+      margin-top: 12px;
+      font-size: 12px;
+    }
+    .back-link a {
+      color: #f97316;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    @media (max-width: 480px) {
+      .page-wrapper {
+        padding: 20px 16px 16px;
+        border-radius: 18px;
+      }
+      .heading-block h1 {
+        font-size: 20px;
+      }
+    }
+
+    /* language visibility */
+    .lang-ar {
+      display: inline;
+    }
+    .lang-en {
+      display: none;
+    }
+    body.ltr .lang-ar {
+      display: none;
+    }
+    body.ltr .lang-en {
+      display: inline;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <!-- Language toggle -->
+    <div class="lang-toggle">
+      <button id="btnAr" class="active">عربي</button>
+      <button id="btnEn">English</button>
+    </div>
+
+    <!-- MAIN FORM STATE -->
+    <div id="formState">
+      <!-- Brand header -->
+      <div class="brand-row">
+        <div class="brand-left">
+          <div class="brand-logo">O</div>
+          <div>
+            <div class="brand-text-main">Outfitsa</div>
+            <div class="brand-text-sub">
+              <span class="lang-ar">أزياء · السعودية</span>
+              <span class="lang-en">Fashion · Saudi Arabia</span>
+            </div>
+          </div>
+        </div>
+        <div class="order-pill" id="orderPill">
+          <span class="lang-ar">طلب:</span>
+          <span class="lang-en">Order:</span>
+          <span id="orderIdText">N/A</span>
+        </div>
+      </div>
+
+      <!-- Heading -->
+      <div class="heading-block">
+        <h1>
+          <span class="lang-ar">كيف كانت تجربتك مع أوتفيسا؟</span>
+          <span class="lang-en">How was your experience?</span>
+        </h1>
+        <p>
+          <span class="lang-ar">دقيقتان فقط. تقييمك يساعدنا في تحسين المنتجات، التوصيل، وخدمة العملاء.</span>
+          <span class="lang-en">1–2 minutes only. Your feedback helps us improve products, delivery and overall service.</span>
+        </p>
+      </div>
+
+      <!-- Steps -->
+      <div class="steps-row">
+        <div class="step-chip">
+          <div class="step-badge">1</div>
+          <div>
+            <span class="lang-ar">اختر عدد النجوم</span>
+            <span class="lang-en">Tap the stars</span>
+          </div>
+        </div>
+        <div class="step-chip">
+          <div class="step-badge">2</div>
+          <div>
+            <span class="lang-ar">اكتب ملاحظة (اختياري)</span>
+            <span class="lang-en">Write a note (optional)</span>
+          </div>
+        </div>
+        <div class="step-chip">
+          <div class="step-badge">3</div>
+          <div>
+            <span class="lang-ar">أرسل التقييم</span>
+            <span class="lang-en">Submit & you’re done</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: rating -->
+      <div class="card">
+        <div class="rating-header-row">
+          <span class="label">
+            <span class="lang-ar">قيّم تجربتك بشكل عام</span>
+            <span class="lang-en">Rate your overall experience</span>
+          </span>
+          <span class="hint" id="ratingHint">
+            <span class="lang-ar">اختر من ١ إلى ٥ نجوم</span>
+            <span class="lang-en">Select 1–5 stars</span>
+          </span>
+        </div>
+        <div class="star-rating" id="starRating">
+          <span class="star" data-value="1">&#9733;</span>
+          <span class="star" data-value="2">&#9733;</span>
+          <span class="star" data-value="3">&#9733;</span>
+          <span class="star" data-value="4">&#9733;</span>
+          <span class="star" data-value="5">&#9733;</span>
+        </div>
+        <div class="live-rating-text" id="liveRatingText">
+          <span class="lang-ar">لم يتم اختيار التقييم بعد</span>
+          <span class="lang-en">Not selected yet</span>
+        </div>
+        <div class="chip-row" id="chipRow">
+          <button type="button" class="chip" data-chip="product">
+            <span class="lang-ar">أحببت المنتج</span>
+            <span class="lang-en">Loved the product</span>
+          </button>
+          <button type="button" class="chip" data-chip="delivery">
+            <span class="lang-ar">توصيل سريع</span>
+            <span class="lang-en">Fast delivery</span>
+          </button>
+          <button type="button" class="chip" data-chip="support">
+            <span class="lang-ar">خدمة عملاء جيدة</span>
+            <span class="lang-en">Good support</span>
+          </button>
+          <button type="button" class="chip" data-chip="website">
+            <span class="lang-ar">موقع سهل الاستخدام</span>
+            <span class="lang-en">Easy website</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Card: comment -->
+      <div class="card">
+        <div class="rating-header-row">
+          <span class="label">
+            <span class="lang-ar">ما الذي يمكننا تحسينه؟</span>
+            <span class="lang-en">Anything we can improve?</span>
+          </span>
+          <span class="hint">
+            <span class="lang-ar">اختياري لكنه مفيد لنا</span>
+            <span class="lang-en">Optional but very helpful</span>
+          </span>
+        </div>
+        <textarea id="commentBox"
+          placeholder="يمكنك الكتابة بالعربية أو الإنجليزية أو أي لغة تفضّلها."></textarea>
+      </div>
+
+      <!-- Footer actions -->
+      <div class="footer-row">
+        <button class="submit-btn" id="submitBtn">
+          <span class="icon">➤</span>
+          <span class="lang-ar">إرسال التقييم</span>
+          <span class="lang-en">Send feedback</span>
+        </button>
+        <div class="note-text">
+          <span class="lang-ar">لن نشارك بياناتك الشخصية. نستخدم التقييم لتحسين تجربة أوتفيسا فقط.</span>
+          <span class="lang-en">We will never share your personal details. Feedback is only used to improve Outfitsa.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- THANK YOU STATE -->
+    <div id="thankyouState" class="thankyou-state">
+      <div class="thankyou-icon">★</div>
+      <h2>
+        <span class="lang-ar">شكرًا لتقييمك!</span>
+        <span class="lang-en">Thank you for your feedback!</span>
+      </h2>
+      <p>
+        <span class="lang-ar">تم استلام تقييمك. هذا يساعدنا على تقديم تجربة أفضل لك ولغيرك من العملاء في المرة القادمة.</span>
+        <span class="lang-en">Your rating has been received. It helps us give a better experience to you and other customers next time.</span>
+      </p>
+      <div class="tiny">
+        <span class="lang-ar">إذا رغبت في تعديل تقييمك، يمكنك التواصل مع خدمة العملاء.</span>
+        <span class="lang-en">If you want to update this feedback later, you can contact our customer service.</span>
+      </div>
+      <div class="back-link">
+        <a href="https://outfitsa.co/en">
+          <span class="lang-ar">الرجوع إلى موقع أوتفيسا</span>
+          <span class="lang-en">Back to Outfitsa</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Read order id from URL: ?order=SO1234
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get("order") || "N/A";
+    document.getElementById("orderIdText").textContent = orderId;
+
+    const stars = document.querySelectorAll(".star");
+    const liveRatingText = document.getElementById("liveRatingText");
+    const ratingHint = document.getElementById("ratingHint");
+    const chips = document.querySelectorAll(".chip");
+    const commentBox = document.getElementById("commentBox");
+    const submitBtn = document.getElementById("submitBtn");
+    const formState = document.getElementById("formState");
+    const thankyouState = document.getElementById("thankyouState");
+
+    const btnAr = document.getElementById("btnAr");
+    const btnEn = document.getElementById("btnEn");
+
+    let selectedRating = 0;
+
+    // Language switch
+    function setLang(lang) {
+      const body = document.body;
+      if (lang === "ar") {
+        body.classList.remove("ltr");
+        document.documentElement.lang = "ar";
+        document.documentElement.dir = "rtl";
+        btnAr.classList.add("active");
+        btnEn.classList.remove("active");
+      } else {
+        body.classList.add("ltr");
+        document.documentElement.lang = "en";
+        document.documentElement.dir = "ltr";
+        btnEn.classList.add("active");
+        btnAr.classList.remove("active");
+      }
+    }
+
+    btnAr.addEventListener("click", () => setLang("ar"));
+    btnEn.addEventListener("click", () => setLang("en"));
+
+    // Default Arabic
+    setLang("ar");
+
+    // Star logic
+    stars.forEach((star) => {
+      star.addEventListener("click", () => {
+        selectedRating = Number(star.dataset.value);
+        stars.forEach((s) => s.classList.remove("active"));
+        stars.forEach((s) => {
+          if (Number(s.dataset.value) <= selectedRating) {
+            s.classList.add("active");
+          }
+        });
+
+        // Update text for both languages
+        liveRatingText.innerHTML =
+          `<span class="lang-ar">اخترت ${selectedRating} من ٥</span>` +
+          `<span class="lang-en">You selected ${selectedRating} out of 5</span>`;
+
+        ratingHint.innerHTML =
+          `<span class="lang-ar">شكرًا لك، يمكنك إضافة ملاحظة إذا أحببت.</span>` +
+          `<span class="lang-en">Thank you, you can also add a short comment.</span>`;
+      });
+
+      star.addEventListener("mouseenter", () => {
+        const hoverVal = Number(star.dataset.value);
+        stars.forEach((s) => s.classList.remove("active"));
+        stars.forEach((s) => {
+          if (Number(s.dataset.value) <= hoverVal) {
+            s.classList.add("active");
+          }
+        });
+        liveRatingText.innerHTML =
+          `<span class="lang-ar">تقييم: ${hoverVal} من ٥</span>` +
+          `<span class="lang-en">Rating: ${hoverVal} / 5</span>`;
+      });
+
+      star.addEventListener("mouseleave", () => {
+        stars.forEach((s) => s.classList.remove("active"));
+        if (selectedRating > 0) {
+          stars.forEach((s) => {
+            if (Number(s.dataset.value) <= selectedRating) {
+              s.classList.add("active");
+            }
+          });
+          liveRatingText.innerHTML =
+            `<span class="lang-ar">اخترت ${selectedRating} من ٥</span>` +
+            `<span class="lang-en">You selected ${selectedRating} out of 5</span>`;
+        } else {
+          liveRatingText.innerHTML =
+            `<span class="lang-ar">لم يتم اختيار التقييم بعد</span>` +
+            `<span class="lang-en">Not selected yet</span>`;
+        }
+      });
+    });
+
+    // Chips
+    chips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        chip.classList.toggle("selected");
+      });
+    });
+
+    // Submit
+    submitBtn.addEventListener("click", () => {
+      if (!selectedRating) {
+        alert(document.body.classList.contains("ltr")
+          ? "Please select at least 1 star rating."
+          : "الرجاء اختيار التقييم (عدد النجوم) أولاً.");
+        return;
+      }
+
+      const selectedChips = [];
+      chips.forEach((chip) => {
+        if (chip.classList.contains("selected")) {
+          selectedChips.push(chip.dataset.chip);
+        }
+      });
+
+      const payload = {
+        order_id: orderId,
+        rating: selectedRating,
+        tags: selectedChips,
+        comment: commentBox.value.trim(),
+      };
+
+      console.log("Feedback payload:", payload);
+
+      // TODO: replace with real API call when backend ready.
+      /*
+      fetch("https://outfitsa.co/api/save-feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+        .then((res) => res.json())
+        .then(() => {
+          formState.style.display = "none";
+          thankyouState.style.display = "block";
+        })
+        .catch(() => {
+          alert(document.body.classList.contains("ltr")
+            ? "Something went wrong. Please try again."
+            : "حدث خطأ ما، حاول مرة أخرى.");
+        });
+      */
+
+      // Demo: directly show thank you
+      formState.style.display = "none";
+      thankyouState.style.display = "block";
+    });
+  </script>
+</body>
+</html>
