@@ -4,9 +4,10 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Outfit – تقييم</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+//fonts.googleapis.com"/>
+//fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
+/* ... (All your existing styles remain the same) ... */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 /* ── Animated background ── */
@@ -107,7 +108,14 @@ body:not(.ltr) .dh{direction:rtl}
   margin-bottom:18px;position:relative;z-index:2;gap:12px;
 }
 .brand-row{display:flex;align-items:center;gap:12px;min-width:0}
-.logo-img{height:44px;border-radius:10px;object-fit:contain;flex-shrink:0}
+.logo-img{
+    height: 48px; /* Increased size slightly */
+    width: auto;
+    border-radius: 8px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
 .logo-fb{
   width:44px;height:44px;border-radius:10px;
   background:linear-gradient(135deg,#f97316,#fbbf24);
@@ -409,7 +417,8 @@ body.ltr .ar{display:none}
   <div class="dh">
     <div class="dh-top">
       <div class="brand-row">
-        <img class="logo-img" src="https://drive.google.com/file/d/1xi9fsAOJSb2qTZN2ME9qQcC3EPStXTHH/view?usp=sharing" alt="Outfit"
+        <!-- FIXED: Using GitHub Raw Image URL -->
+        <img class="logo-img" src="https://raw.githubusercontent.com/sabeya143111-arch/oufitsa/main/.png" alt="Outfit"
           onerror="this.style.display='none';document.getElementById('lfb').classList.add('show')"/>
         <div class="logo-fb" id="lfb">O</div>
         <div>
@@ -422,7 +431,7 @@ body.ltr .ar{display:none}
         <button class="lb" id="ben" onclick="setLang('en')">English</button>
       </div>
     </div>
-
+<!-- ... (Rest of your HTML body stays exactly the same) ... -->
     <div class="ord-pill" id="opill">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
       <span class="ar">رقم الطلب:</span><span class="en">Order:</span>
@@ -683,4 +692,3 @@ body.ltr .ar{display:none}
 </script>
 </body>
 </html>
-
